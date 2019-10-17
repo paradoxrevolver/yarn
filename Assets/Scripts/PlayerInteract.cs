@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
-    private Interactable interactable;
+    //private Interactable interactable;
 
     void Update()
     {
+        /*
         if (InputManager.Interact)
         {
             interactable.activate();
         }
-
+        */
     }
 
 }
