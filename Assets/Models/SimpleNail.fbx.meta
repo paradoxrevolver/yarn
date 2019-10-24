@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c33b34224d05d1e4d98af5096fcc3243
+guid: e808d40f77fb2e549b76a146fda21ba6
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable: []
@@ -23,7 +23,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -84,7 +84,7 @@ ModelImporter:
     globalScale: 0.005
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 1
+    hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 0
