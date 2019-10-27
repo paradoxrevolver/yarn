@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/**
+ * The GameManager holds any data or functions that need to persist across scene loads.
+ */
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
