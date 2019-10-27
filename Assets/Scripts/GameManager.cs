@@ -1,23 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
-    // Start is called before the first frame update
-    void Start()
+    
+    private void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-    private void Restart()
-    {
+        // Ensures that the GameObject with this script is a Singleton:
+        // a duplicate of this script will always be deleted
+        // and this GameObject will not be destroyed on scene change.
         instance = this;
         if (instance != null && instance != this)
         {
@@ -26,4 +18,9 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
     }
+    
+    /**
+     * Restarts the currently active scene.
+     */
+    private void OnRestart() { SceneManager.LoadScene(SceneManager.GetActiveScene().name); }
 }
