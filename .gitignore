@@ -1,15 +1,22 @@
+# last updated 19.10.25 by rubic
+
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
 [Ll]ogs/
+[Tt]est/
+[Tt]ests/
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # [Aa]ssets/AssetStoreTools*
 
 # Visual Studio cache directory
 .vs/
+
+# Jetbrains cache directory
+.idea/
 
 # Gradle cache directory
 .gradle/
