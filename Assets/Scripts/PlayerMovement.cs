@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour {
     /* VISIBLE IN INSPECTOR */
     [Header("Values")]
     [Tooltip("Modifies the base movement speed of the player.")]
-    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private float moveSpeed = 300f;
     
     /* NOT VISIBLE IN INSPECTOR */
     private PlayerInput _playerInput;
