@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Nail : Interactable {
     // A Nail manages its own state

@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 /**
  * An Interactable GameObject can perform an action when the Player interacts with it.
