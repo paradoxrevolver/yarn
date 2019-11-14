@@ -6,15 +6,15 @@ using UnityEngine.SceneManagement;
  */
 public class GameManager : MonoBehaviour
 {
-    private static GameManager _instance;
+    private static GameManager instance;
     
     private void Awake()
     {
         // Ensures that the GameObject with this script is a Singleton:
         // a duplicate of this script will always be deleted
         // and this GameObject will not be destroyed on scene change.
-        _instance = this;
-        if (_instance != null && _instance != this)
+        instance = this;
+        if (instance != null && instance != this)
         {
             Destroy(this.gameObject);
             return;

@@ -8,11 +8,11 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float moveSpeed = 300f;
     
     /* NOT VISIBLE IN INSPECTOR */
-    private PlayerInput _playerInput;
-    private Rigidbody _rb;
+    private PlayerInput playerInput;
+    private Rigidbody rb;
 
     // keeps track of how the player is trying to move.
-    private Vector3 _movement;
+    private Vector3 movement;
 
     /**
      * Awake is called IMMEDIATELY as this script is instantiated.
@@ -24,22 +24,22 @@ public class PlayerMovement : MonoBehaviour {
          * Note that PlayerInput is actually a script! It's being
          * generated inside of the Scripts/Generated folder.
          */
-        _playerInput = new PlayerInput();
+        playerInput = new PlayerInput();
         /**
          * This is basically a callback. It saves the OnMove function
          * inside of the Move.started, performed, and canceled event,
          * so any time the user tries to move the player, it will
          * execute the OnMove function.
          */
-        _playerInput.Player.Move.started += OnMove;
-        _playerInput.Player.Move.performed += OnMove;
-        _playerInput.Player.Move.canceled += OnMove;
+        playerInput.Player.Move.started += OnMove;
+        playerInput.Player.Move.performed += OnMove;
+        playerInput.Player.Move.canceled += OnMove;
 
         /**
          * If the GameObject this script is on (the player) has a Rigidbody
          * (which it always should), grab it.
          */
-        _rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     /**
@@ -47,15 +47,15 @@ public class PlayerMovement : MonoBehaviour {
      * we avoid doing any work taking user input if the player is supposed
      * to be disabled.
      */
-    private void OnEnable() { _playerInput.Player.Enable(); }
-    private void OnDisable() { _playerInput.Player.Disable(); }
+    private void OnEnable() { playerInput.Player.Enable(); }
+    private void OnDisable() { playerInput.Player.Disable(); }
 
     /**
      * Runs once for every physics update. This is different from
      * normal Update() which runs once for every rendering update.
      */
     private void FixedUpdate() {
-        Vector3 newVelocity = _movement;
+        Vector3 newVelocity = movement;
         /**
          * newVelocity is now sped up by our variable and then adjusted by fixedDeltaTime.
          * The fixedDeltaTime is very important because otherwise the player's movement
@@ -63,11 +63,11 @@ public class PlayerMovement : MonoBehaviour {
          */
         newVelocity *= moveSpeed * Time.fixedDeltaTime;
         // Don't lose the current upwards velocity, if any.
-        newVelocity.y = _rb.velocity.y;
+        newVelocity.y = rb.velocity.y;
         // Update velocity! Done.
-        _rb.velocity = newVelocity;
+        rb.velocity = newVelocity;
         // For the time being, don't allow the player to gain angular velocity.
-        _rb.angularVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
     /**
@@ -84,6 +84,6 @@ public class PlayerMovement : MonoBehaviour {
          * Vector2, we have to turn this into a Vector3 based on X and Z instead.
          */
         Vector2 movement2d = ctx.ReadValue<Vector2>();
-        _movement = new Vector3(movement2d.x, 0, movement2d.y);
+        movement = new Vector3(movement2d.x, 0, movement2d.y);
     }
 }

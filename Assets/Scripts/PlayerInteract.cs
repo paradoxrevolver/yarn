@@ -4,20 +4,20 @@ using UnityEngine.InputSystem;
 
 public class PlayerInteract : MonoBehaviour {
     
-    private PlayerInput _playerInput;
-    private List<Interactable> _interactables;
+    private PlayerInput playerInput;
+    private List<Interactable> interactables;
 
     private void Awake() {
-        _playerInput = new PlayerInput();
-        _playerInput.Player.Fire.started += OnInteract;
-        _playerInput.Player.Enable();
+        playerInput = new PlayerInput();
+        playerInput.Player.Fire.started += OnInteract;
+        playerInput.Player.Enable();
         
-        _interactables = new List<Interactable>();
+        interactables = new List<Interactable>();
     }
     
-    public Interactable TopInteractable() { return _interactables[0]; }
-    public void AddInteractable(Interactable i) { _interactables.Add(i); }
-    public void RemoveInteractable(Interactable i) { _interactables.Remove(i); }
+    public Interactable TopInteractable() { return interactables[0]; }
+    public void AddInteractable(Interactable i) { interactables.Add(i); }
+    public void RemoveInteractable(Interactable i) { interactables.Remove(i); }
 
     private void OnInteract(InputAction.CallbackContext ctx) { TopInteractable().Interact(); }
 
