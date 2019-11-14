@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4e97f2fe5cdf848bd6fe3be8acf8dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshLowerOffset: {x: 0, y: -2, z: 0}
+  meshLowerOffset: {x: 0, y: -1.5, z: 0}
   meshMoveSpeed: 0.1
 --- !u!136 &7231737498855535285
 CapsuleCollider:
@@ -57,9 +57,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.006
-  m_Height: 0.012
+  m_Height: 0.007
   m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 0.001}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1293638320046029879
 PrefabInstance:
   m_ObjectHideFlags: 0

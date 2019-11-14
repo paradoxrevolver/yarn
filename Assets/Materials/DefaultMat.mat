@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RedMat
+  m_Name: DefaultMat
   m_Shader: {fileID: 4800000, guid: e61c0581d4b26d149aa98d2bc7dad66a, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -67,16 +67,16 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RimAmount: 0.7
-    - _RimThreshold: 0.1
+    - _RimAmount: 0.697
+    - _RimThreshold: 0.241
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _AmbientColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Color: {r: 0.764151, g: 0.16220188, b: 0.19898757, a: 1}
+    - _AmbientColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.32300803, g: 0.34142816, b: 0.39200002, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
