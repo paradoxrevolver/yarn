@@ -9,14 +9,14 @@ public abstract class Interactable : MonoBehaviour {
     // Sets the dimensions of the collider and offset from center of this GameObject
     private Vector3 colliderDim = new Vector3(2, 2, 2);
     private Vector3 colliderOffset = new Vector3(0, 1, 0);
-    private BoxCollider _collider;
+    private BoxCollider boxCollider;
 
     protected virtual void Awake() {
         // place a trigger region on this Interactable
-        _collider = gameObject.AddComponent<BoxCollider>();
-        _collider.isTrigger = true;
-        _collider.size = colliderDim;
-        _collider.center = colliderOffset;
+        boxCollider = gameObject.AddComponent<BoxCollider>();
+        boxCollider.isTrigger = true;
+        boxCollider.size = colliderDim;
+        boxCollider.center = colliderOffset;
     }
 
     /*
