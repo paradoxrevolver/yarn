@@ -19,7 +19,10 @@ public class PlayerInteract : MonoBehaviour {
     public void AddInteractable(Interactable i) { interactables.Add(i); }
     public void RemoveInteractable(Interactable i) { interactables.Remove(i); }
 
-    private void OnInteract(InputAction.CallbackContext ctx) { TopInteractable().Interact(); }
+    private void OnInteract(InputAction.CallbackContext ctx) {
+        if(interactables.Count > 0)
+            TopInteractable().Interact();
+    }
 
 }
 

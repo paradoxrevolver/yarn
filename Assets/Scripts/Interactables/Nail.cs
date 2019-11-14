@@ -23,12 +23,6 @@ public class Nail : Interactable {
         meshOffsetGoal = meshOffsetDefault;
     }
 
-    private void OnTriggerEnter(Collider other) {
-        if(other.CompareTag("Player")) {
-            Interact();
-        }
-    }
-
     public override void Interact() {
         ToggleState();
         UpdateMeshGoal();
