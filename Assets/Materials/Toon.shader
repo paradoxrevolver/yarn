@@ -9,7 +9,7 @@
 		_AmbientColor("Ambient Color", Color) = (0.4, 0.4, 0.4, 1)
 		[HDR]
 		_SpecularColor("Specular Color", Color) = (1, 1, 1, 1)
-		_Glossiness("Glossiness", Float) = 32
+		_Glossiness("Glossiness", Float) = 32.0
 		[HDR]
 		_RimColor("Rim Color", Color) = (1, 1, 1, 1)
 		_RimAmount("Rim Amount", Range(0, 1)) = 0.716
