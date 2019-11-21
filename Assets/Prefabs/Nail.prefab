@@ -44,8 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4e97f2fe5cdf848bd6fe3be8acf8dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshLowerOffset: {x: 0, y: -1.5, z: 0}
-  meshMoveSpeed: 0.1
 --- !u!136 &7231737498855535285
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -60,6 +58,20 @@ CapsuleCollider:
   m_Height: 0.007
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1293638319837771301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7120754119071130942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e801dd231eab0914489fa7a7ed7fce62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lowerOffset: {x: 0, y: -1.5, z: 0}
+  moveSpeed: 0.15
 --- !u!1001 &1293638320046029879
 PrefabInstance:
   m_ObjectHideFlags: 0
