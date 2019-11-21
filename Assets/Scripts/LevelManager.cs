@@ -3,19 +3,32 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    public int normalState  = 1;
-    public int wonState     = 0;
-    public int lostState    = 0;
 
-    // private int push_pin_count = GameManager.push_pins.count;
+    public enum State
+    {
+        Normal,
+        Won,
+        Lost
+    }
+
+    private State state;
+    private GameObject[] pushpinArray;
+    private GameObject[] yarnArray;
+
+    // private int push_pin_count = GameManager.getPushPinCount();
     // private int push_pin_complete_count;
     // private int yarn_string_state;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        state = State.Normal;
         
+        pushpinArray = GameObject.FindGameObjectsWithTag("Pushpin");
+        yarnArray = GameObject.FindGameObjectsWithTag("Yarn");
     }
+
+    
 
     // Update is called once per frame
     void Update()
@@ -36,41 +49,51 @@ public class LevelManager : MonoBehaviour
         //  { levelFailed();}
     }
 
-    void levelComplete()
+    void CheckLevelStatus()
     {
-        normalState = 0;
-        wonState = 1;
-        lostState = 0;
+        // Check if the yarn is burned
+
+        // Check if the pushpins are tied
+        int PinCompleteCount = 0;
+        for(int i=0; i<pushpinArray.Length; i++)
+        {
+            if (pushpinArray[i].IsDone == true)
+            {
+                PinCompleteCount++;
+
+            }
+            else
+            {
+                
+            }
+        }
+        if(PinCompleteCount == pushpinArray.Length)
+        {
+            LevelComplete();
+        }
+    }
+
+    void LevelComplete()
+    {
+        state = State.Won;
         // Display "Level Complete"
         // Probably calling a gameManager function
     }
 
-    void levelFailed()
+    void LevelFailed()
     {
-        normalState = 0;
-        wonState = 0;
-        lostState = 1;
+        state = State.Lost;
 
         // Display "Level Failed"
         // Probably calling a gameManager function
     }
 
-    void disappearLevel()
+    void LevelNormal()
     {
-        normalState = 1;
-        wonState = 0;
-        lostState = 0;
+        state = State.Normal;
 
         // If showing a display, turn off display and continue game
         // Probably calling a gameManager function
-    }
-
-    bool playerStuck()
-    {
-        // Check if the player can connect yarn to anything?
-        // Not really sure how to check if the player is out of moves
-        // Might not really need this function if it's too hard to implement
-        return false;
     }
 
 
