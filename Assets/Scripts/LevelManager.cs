@@ -13,6 +13,7 @@ public class LevelManager : MonoBehaviour
 
     private State state;
     private GameObject[] pushpinArray;
+
     private GameObject[] yarnArray;
 
     // private int push_pin_count = GameManager.getPushPinCount();
@@ -26,6 +27,8 @@ public class LevelManager : MonoBehaviour
         
         pushpinArray = GameObject.FindGameObjectsWithTag("Pushpin");
         yarnArray = GameObject.FindGameObjectsWithTag("Yarn");
+
+     
     }
 
     
@@ -51,26 +54,28 @@ public class LevelManager : MonoBehaviour
 
     void CheckLevelStatus()
     {
-        // Check if the yarn is burned
+        // Check if the yarn is destroyed
+        bool yarnDestroyed = false;
+        foreach (GameObject obj in yarnArray)
+        {
+            if (obj.GetComponent<Yarn>().IsDestroyed())
+            {
+                yarnDestoryed = true;
+            }
+        }
+        if (yarnDestroyed)
+        {
+            LevelFailed();
+        }
+
 
         // Check if the pushpins are tied
-        int PinCompleteCount = 0;
-        for(int i=0; i<pushpinArray.Length; i++)
-        {
-            if (pushpinArray[i].IsDone == true)
-            {
-                PinCompleteCount++;
-
-            }
-            else
-            {
-                
-            }
+        bool pushpinsDone = true;
+        foreach (GameObject obj in pushpinArray) {
+            if (!obj.GetComponent<Pushpin>().IsDone())
+                pushpinsDone = false;
         }
-        if(PinCompleteCount == pushpinArray.Length)
-        {
-            LevelComplete();
-        }
+        if (pushpinsDone) LevelComplete();
     }
 
     void LevelComplete()
