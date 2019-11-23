@@ -1,11 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 /**
  * The GameManager holds any data or functions that need to persist across scene loads.
  */
-public class GameManager : MonoBehaviour
-{
+public class GameManager : MonoBehaviour {
+    private PlayerInput playerInput;
+    
     private static GameManager instance;
     
     private void Awake()
@@ -20,10 +23,23 @@ public class GameManager : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(this.gameObject);
+        
+        playerInput = new PlayerInput();
     }
-    
+
+    private void OnEnable() {
+        playerInput.Player.Restart.started += OnRestart;
+        playerInput.Player.Enable();
+    }
+
+    private void OnDisable() {
+        playerInput.Player.Disable();
+    }
+
     /**
      * Restarts the currently active scene.
      */
-    private void OnRestart() { SceneManager.LoadScene(SceneManager.GetActiveScene().name); }
+    private void OnRestart(InputAction.CallbackContext ctx) {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }
