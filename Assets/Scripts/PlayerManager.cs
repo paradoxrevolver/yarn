@@ -4,20 +4,16 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public enum State
-    {
+    public enum State {
         Normal,
         Holding,
-        Pulling
+        Pulling,
     }
     private State state;
     
-    private void Awake()
-    {
+    private void Awake() {
         state = State.Normal;
     }
-    public void SetState(State state)
-    {
-        this.state = state;
-    }
+    public void SetState(State state) { this.state = state; }
+    public bool CheckState(State state) { return state == this.state; }
 }
