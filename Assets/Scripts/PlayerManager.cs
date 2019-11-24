@@ -10,7 +10,9 @@ public class PlayerManager : MonoBehaviour
         Pulling,
     }
     private State state;
-    
+
+    public Yarn YarnHeld { get; set; }
+
     private void Awake() {
         state = State.Normal;
     }

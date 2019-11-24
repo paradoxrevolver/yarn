@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf9846e6f12e4238b468bfe376d73401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  positionYarnInPlayersArms: {x: 0, y: -0.4, z: -0.5}
 --- !u!1001 &1583258830025174331
 PrefabInstance:
   m_ObjectHideFlags: 0
