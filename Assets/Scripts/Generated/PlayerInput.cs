@@ -41,6 +41,14 @@ public class PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Restart"",
+                    ""type"": ""Button"",
+                    ""id"": ""4c6d3b33-282e-406f-b8e5-ee0cba7a9d55"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -228,6 +236,17 @@ public class PlayerInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Joystick"",
                     ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6e0c556c-1de2-4325-a158-ba2a72cc3d53"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Restart"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -651,6 +670,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+        m_Player_Restart = m_Player.FindAction("Restart", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -716,6 +736,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Fire;
+    private readonly InputAction m_Player_Restart;
     public struct PlayerActions
     {
         private PlayerInput m_Wrapper;
@@ -723,6 +744,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
+        public InputAction @Restart => m_Wrapper.m_Player_Restart;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -741,6 +763,9 @@ public class PlayerInput : IInputActionCollection, IDisposable
                 Fire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
                 Fire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
                 Fire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                Restart.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRestart;
+                Restart.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRestart;
+                Restart.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRestart;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -754,6 +779,9 @@ public class PlayerInput : IInputActionCollection, IDisposable
                 Fire.started += instance.OnFire;
                 Fire.performed += instance.OnFire;
                 Fire.canceled += instance.OnFire;
+                Restart.started += instance.OnRestart;
+                Restart.performed += instance.OnRestart;
+                Restart.canceled += instance.OnRestart;
             }
         }
     }
@@ -912,6 +940,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
+        void OnRestart(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

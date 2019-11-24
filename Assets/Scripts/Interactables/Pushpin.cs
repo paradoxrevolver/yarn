@@ -16,6 +16,19 @@ public class Pushpin : Interactable {
     public bool IsDone() { return state == State.Done; }
 
     public override void Interact() {
-        print("A Pushpin was interacted with and nothing happened.");
+        if(playerManager.CheckState(PlayerManager.State.Holding)
+                && state == State.Untied) 
+            AttachYarn(playerManager.YarnHeld);
+    }
+
+    private void AttachYarn(Yarn yarn) {
+        state = State.Tied;
+        playerManager.SetState(PlayerManager.State.Pulling);
+        yarn.AddContact(new Yarn.Contact(gameObject));
+        print("The player just attached yarn to a pushpin.");
+    }
+
+    private void DetachYarn() {
+        
     }
 }
