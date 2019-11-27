@@ -23,12 +23,14 @@ public class Pushpin : Interactable {
 
     private void AttachYarn(Yarn yarn) {
         state = State.Tied;
-        playerManager.SetState(PlayerManager.State.Pulling);
+        if(playerManager.CheckState(PlayerManager.State.Holding))
+            playerManager.SetState(PlayerManager.State.Pulling);
         yarn.AddContact(new Yarn.Contact(gameObject));
         print("The player just attached yarn to a pushpin.");
     }
 
     private void DetachYarn() {
-        
+        state = State.Untied;
+        playerManager.SetState(PlayerManager.State.Holding);
     }
 }

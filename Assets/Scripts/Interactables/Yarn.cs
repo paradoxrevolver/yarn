@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Diagnostics;
 
 public class Yarn : Interactable {
     public Vector3 positionYarnInPlayersArms;
@@ -14,7 +13,7 @@ public class Yarn : Interactable {
         public GameObject source;
         
         // the angle from the previous Contact to the next
-        // note that this value is null for the first and last Contact
+        // note that this value is null for the last Contact
         public float angle;
         
         // a list of calculated points that the yarn is actually rendered at
