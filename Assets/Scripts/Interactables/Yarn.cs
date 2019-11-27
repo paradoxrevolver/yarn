@@ -83,7 +83,11 @@ public class Yarn : Interactable {
     }
 
     private void PutDown() {
-        
+        playerManager.SetState(PlayerManager.State.Normal);
+        playerManager.YarnHeld = null;
+        transform.parent = null;
+        transform.localPosition = player.transform.localPosition;
+        print("The player has dropped the yarn.");
     }
 
     private void OnDrawGizmos() {
