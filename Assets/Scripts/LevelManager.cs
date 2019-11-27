@@ -60,7 +60,7 @@ public class LevelManager : MonoBehaviour
         {
             if (obj.GetComponent<Yarn>().IsDestroyed())
             {
-                yarnDestoryed = true;
+                yarnDestroyed = true;
             }
         }
         if (yarnDestroyed)
