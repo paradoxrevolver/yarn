@@ -84,7 +84,9 @@ public class Yarn : Interactable {
     }
 
     private void PutDown() {
-        
+        playerManager.SetState(PlayerManager.State.Normal);
+        playerManager.YarnHeld = null;
+        transform.parent = null;
     }
 
     private void OnDrawGizmos() {
