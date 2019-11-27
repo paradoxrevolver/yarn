@@ -88,6 +88,7 @@ public class Yarn : Interactable {
     }
 
     private void OnDrawGizmos() {
+        // render gizmos showing the render point connections
         if (contacts != null)
             for (var i = 0; i < contacts.Count; i++) {
                 // draw lines between all of the render points for this contact
