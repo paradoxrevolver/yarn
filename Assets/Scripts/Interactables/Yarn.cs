@@ -69,6 +69,10 @@ public class Yarn : Interactable {
             PickUp();
             AddContact(new Contact(player));
         }
+        else if(playerManager.CheckState(PlayerManager.State.Pulling))
+        {
+            PutDown();
+        }
     }
 
     public void AddContact(Contact c) { contacts.Add(c); }
