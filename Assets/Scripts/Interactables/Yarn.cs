@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,16 +13,25 @@ public class Yarn : Interactable {
     public bool IsDestroyed() { return state == State.Destroyed; }
 
     /**
-     * PotentialContacts are all objects which could potentially become
-     * a Contact. Contacts maintain a list of these and raises an alarm
-     * if they 
+     * PotentialContactStructs are references to GameObject which could potentially
+     * become a Contact. Contacts maintain a list of these and recognize when they
+     * rotate far enough to become an actual Contact.
      */
-    public struct PotentialContact {
+    public struct PotentialContactStruct {
         // the GameObject that could become a potential Contact
         public GameObject source;
         
         // the angle this PotentialContact has with the owning Contact
         public float parentAngle;
+
+        public PotentialContactStruct(GameObject creator, GameObject source) {
+            this.source = source;
+            var sourcePos = source.transform.position;
+            var creatorPos = creator.transform.position;
+            Vector2 sourcePosXZ = new Vector2(sourcePos.x, sourcePos.z);
+            Vector2 creatorPosXZ = new Vector2(creatorPos.x, creatorPos.z);
+            parentAngle = Vector2.SignedAngle(Vector2.right, sourcePosXZ - creatorPosXZ);
+        }
     }
     
     /**
@@ -31,11 +39,14 @@ public class Yarn : Interactable {
      * this Yarn object is connected to.
      */
     public class Contact {
+        // the Yarn that this Contact is inside of
+        public Yarn yarn;
+        
         // the GameObject that owns this Contact
         public GameObject source;
         
         // the angle from this Contact to the next Contact
-        // calculated on the XZ plane relative to Vector3.right
+        // calculated on the XZ plane relative to Vector2.right
         // note that this value is null for the last contact in a list
         public float angle;
         
@@ -43,26 +54,52 @@ public class Yarn : Interactable {
         public List<Vector3> renderPoints;
 
         // a list of potential contacts from the previous frame, for anticipating new contacts
-        public List<PotentialContact> oldPotential;
+        public List<PotentialContactStruct> oldPotential;
 
-        public Contact(GameObject source, float angle = 0) {
+        public Contact(Yarn yarn, GameObject source, float angle = 0) {
+            this.yarn = yarn;
             this.source = source;
             this.angle = angle;
             renderPoints = new List<Vector3>();
-            oldPotential = new List<PotentialContact>();
+            oldPotential = new List<PotentialContactStruct>();
+        }
+
+        /*
+         * Update all of the data on this Contact.
+         *
+         * Uses nextContact to figure out the angle.
+         */
+        public void Update(Contact nextContact) {
+            // update the angle this Contact has with the next Contact, if it has one
+            if (nextContact != null) {
+                Vector3 nextContactPos = nextContact.source.transform.position - source.transform.position;
+                angle = Vector2.SignedAngle(Vector2.right, new Vector2(nextContactPos.x, nextContactPos.z));
+            }
+            
+            // update the render points
+            // todo: show render points properly, use values from PotentialContact class
+            renderPoints.Clear();
+            renderPoints.Add(source.transform.position);
+            
+            // get a new list of potential contact structs to compare with the old one
+            List<PotentialContactStruct> newPotential = new List<PotentialContactStruct>();
+            foreach (PotentialContact pc in GameManager.allPotentialContacts) {
+                newPotential.Add(new PotentialContactStruct());
+            }
+            // then set the new list to be old
         }
     }
     private List<Contact> contacts;
 
-    public void AddContact(GameObject obj) {
-        contacts.Add(new Contact(obj));
-    }
+    public void AddContact(GameObject obj) { contacts.Add(new Contact(this, obj)); }
     
     /* Remove all Contacts with obj as its source. */
     public void RemoveContactAll(GameObject obj) {
         foreach(Contact c in contacts.FindAll(c => c.source == obj))
             contacts.Remove(c);
     }
+
+    public void RemoveContact(Contact c) { contacts.Remove(c); }
     
     /*
      * Remove a Contacts with obj as its source only at the beginning or end of the contacts list.
@@ -97,25 +134,15 @@ public class Yarn : Interactable {
     }
 
     private void FixedUpdate() {
-        UpdateAllRenderPoints();
-    }
-
-    /**
-     * Runs through every contact and makes sure that all renderPoints
-     * lists are valid.
-     */
-    private void UpdateAllRenderPoints() {
-        foreach(Contact c in contacts)
-            UpdateRenderPoints(c);
-    }
-
-    /**
-     * Checks a single Contact to make sure that its renderPoints
-     * list is valid.
-     */
-    private void UpdateRenderPoints(Contact c) {
-        c.renderPoints.Clear();
-        c.renderPoints.Add(c.source.transform.position);
+        for (var i = 0; i < contacts.Count; i++) {
+            // the last Contact has no next Contact
+            if (i == contacts.Count - 1) {
+                contacts[i].Update(null);
+                continue;
+            }
+            // otherwise update as normal
+            contacts[i].Update(contacts[i + 1]);
+        }
     }
 
     public override void Interact() {

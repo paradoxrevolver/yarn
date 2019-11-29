@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,7 @@ using UnityEngine.SceneManagement;
  */
 public class GameManager : MonoBehaviour {
     private PlayerInput playerInput;
+    public static List<PotentialContact> allPotentialContacts;
     
     private static GameManager instance;
     
@@ -25,6 +27,7 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(this.gameObject);
         
         playerInput = new PlayerInput();
+        allPotentialContacts = FindObjectsOfType<PotentialContact>().ToList();
     }
 
     private void OnEnable() {
