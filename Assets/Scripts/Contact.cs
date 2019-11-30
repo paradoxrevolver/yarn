@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,15 +20,20 @@ public class Contact {
      */
     public Vector3 yarnLine;
     public Vector2 yarnLineXZ;
+
+    // the initial anglular velocity the player had when this Contact was created
+    private float initialAngle;
     
     // a list of calculated points that the yarn is actually rendered at
     public List<Vector3> renderPoints;
 
-    public Contact(Yarn yarn, GameObject source, LevelManager levelManager) {
+    public Contact(Yarn yarn, GameObject source, LevelManager levelManager, float initialAngle) {
         this.yarn = yarn;
         this.source = source;
         this.levelManager = levelManager;
+        this.initialAngle = initialAngle;
         renderPoints = new List<Vector3>();
+        UpdateRenderPoints();
     }
 
     /* Update the render points for this Contact. */
@@ -85,9 +91,12 @@ public class Contact {
                 
                 // has this Contactable rotated in a way that crossed over this Contact's angle?
                 // and is this Contactable now within distance of this Contact's line?
-                if (oldAngle * newAngle < 0 && newRadius < yarnLineXZ.magnitude) {
+                // and is the new angle close-ish to zero so we aren't connecting backwards?
+                if (oldAngle * newAngle < 0 
+                        && newRadius < yarnLineXZ.magnitude
+                        && Math.Abs(newAngle) < 90) {
                     // in that case, this potential contact becomes a new contact
-                    yarn.InsertContact(newPC.source.gameObject, index);
+                    yarn.InsertContact(newPC.source.gameObject, index + 1, newAngle);
                 }
             }
             // update, or add for the first time, the newer potential contact.
