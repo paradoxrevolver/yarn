@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1293638319414553333}
   - component: {fileID: 1293638319414553339}
-  - component: {fileID: 1345419568}
+  - component: {fileID: 2956844451186357919}
   m_Layer: 0
   m_Name: Nail
   m_TagString: Untagged
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4e97f2fe5cdf848bd6fe3be8acf8dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1345419568
+--- !u!114 &2956844451186357919
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,7 +105,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: e7221bb4299f2d9418bc4bf09d1a609f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e7221bb4299f2d9418bc4bf09d1a609f,
         type: 3}
