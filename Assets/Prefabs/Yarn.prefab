@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf9846e6f12e4238b468bfe376d73401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionYarnInPlayersArms: {x: 0, y: -0.4, z: -0.5}
+  positionYarnInPlayersArms: {x: 0, y: -0.4, z: 0.5}
+  mesh: {fileID: 7411008065860400178}
 --- !u!1001 &1583258830025174331
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -139,6 +140,12 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: fc883cb8b3fd8fa4a9c4b19e725146c3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 529b39f4267f2704e867f40f8e570810, type: 3}
+--- !u!1 &7411008065860400178 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 529b39f4267f2704e867f40f8e570810,
+    type: 3}
+  m_PrefabInstance: {fileID: 1583258830025174331}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5801315040694830625 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 529b39f4267f2704e867f40f8e570810,

@@ -23,7 +23,6 @@ public class PlayerInteract : MonoBehaviour {
         if(interactables.Count > 0)
             TopInteractable().Interact();
     }
-
 }
 
 
