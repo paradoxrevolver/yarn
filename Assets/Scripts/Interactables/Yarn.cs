@@ -19,13 +19,13 @@ public class Yarn : Interactable {
      * this Yarn object is connected to.
      */
     private List<Contact> contacts;
-
+    
     public void AddContact(GameObject obj) {
-        contacts.Add(new Contact(this, obj, levelManager));
+        contacts.Add(new Contact(this, obj, levelManager, 0));
     }
 
-    public void InsertContact(GameObject obj, int index) {
-        contacts.Insert(index, new Contact(this, obj, levelManager));
+    public void InsertContact(GameObject obj, int index, float initialAngle) {
+        contacts.Insert(index, new Contact(this, obj, levelManager, initialAngle));
     }
     
     /* Remove all Contacts with obj as its source. */
