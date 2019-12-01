@@ -103,4 +103,16 @@ public class Contact {
             c.AddPotentialContact(this, newPC);
         }
     }
+    /*
+     * Disconnects the most recent contact based on yarn tracking.
+     */
+    public void updateUnravelled(Contact prevContact)
+    {
+        var prevYarnLineXZ = prevContact.yarnLineXZ;
+        var angleToPrevious = Vector2.SignedAngle(prevYarnLineXZ, this.yarnLineXZ);
+        if (angleToPrevious * initialAngle < 0 && Math.Abs(angleToPrevious) < 90)
+        {
+            yarn.RemoveContact(this);
+        }
+    }
 }
