@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 
 public class Yarn : Interactable {
     public Vector3 positionYarnInPlayersArms;
+    public LineRenderer lineRenderer;
 
     private LevelManager levelManager;
-    
+
     public enum State {
         Normal,
         Destroyed,
@@ -69,6 +72,16 @@ public class Yarn : Interactable {
         levelManager = FindObjectOfType<LevelManager>();
     }
 
+    private void Update() {
+        // update the points the LineRenderer is rendering
+        if (lineRenderer) {
+            var linePoints = new List<Vector3>();
+            foreach (var c in contacts) linePoints.AddRange(c.renderPoints);
+            lineRenderer.positionCount = linePoints.Count;
+            lineRenderer.SetPositions(linePoints.ToArray());
+        }
+    }
+
     private void FixedUpdate() { UpdateAllContacts(); }
 
     private void UpdateAllContacts() {
@@ -81,12 +94,12 @@ public class Yarn : Interactable {
             contacts[i].UpdateLine(contacts[i + 1]);
         
         // contacts remove themselves if they've been unraveled
-        for(var i = 1; i < contacts.Count - 1; i++)
-            contacts[i].UpdateUnraveled(contacts[i - 1]);
+        /*for(var i = 1; i < contacts.Count - 1; i++)
+            contacts[i].UpdateUnraveled(contacts[i - 1]);*/
         
         // update the potential contacts list, adding new proceeding contacts if necessary.
         for(var i = 0; i < contacts.Count - 1; i++)
-            contacts[i].UpdatePotentialContacts(contacts[i + 1], i);
+            contacts[i].UpdateCandidates(contacts[i + 1], i);
     }
 
     public override void Interact() {
