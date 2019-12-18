@@ -81,8 +81,8 @@ public class Yarn : Interactable {
             contacts[i].UpdateLine(contacts[i + 1]);
         
         // contacts remove themselves if they've been unraveled
-        for(var i = 1; i < contacts.Count - 1; i++)
-            contacts[i].UpdateUnraveled(contacts[i - 1]);
+        /*for(var i = 1; i < contacts.Count - 1; i++)
+            contacts[i].UpdateUnraveled(contacts[i - 1]);*/
         
         // update the potential contacts list, adding new proceeding contacts if necessary.
         for(var i = 0; i < contacts.Count - 1; i++)
