@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.PlayerLoop;
 
 public class Yarn : Interactable {
     public Vector3 positionYarnInPlayersArms;
