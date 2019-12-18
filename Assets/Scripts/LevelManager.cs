@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
@@ -12,23 +13,23 @@ public class LevelManager : MonoBehaviour
     }
 
     private State state;
+    
     private GameObject[] pushpinArray;
-
     private GameObject[] yarnArray;
+    public HashSet<Contactable> allContactables;
 
     // private int push_pin_count = GameManager.getPushPinCount();
     // private int push_pin_complete_count;
     // private int yarn_string_state;
 
     // Start is called before the first frame update
-    void Awake()
-    {
+    void Awake() {
         state = State.Normal;
         
         pushpinArray = GameObject.FindGameObjectsWithTag("Pushpin");
         yarnArray = GameObject.FindGameObjectsWithTag("Yarn");
 
-     
+        allContactables = new HashSet<Contactable>(FindObjectsOfType<Contactable>());
     }
 
     
