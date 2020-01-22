@@ -89,8 +89,8 @@ public class Yarn : Interactable {
             contacts[i].UpdatePotentialContacts(contacts[i + 1], i);
 
         // Delete unravelled contacts
-        for (var i = 1; i < contacts.Count - 1; i++)
-            contacts[i].updateUnravelled(contacts[i - 1]);
+        //for (var i = 1; i < contacts.Count - 1; i++)
+        //    contacts[i].UpdateUnraveled(contacts[i - 1]);
     }
 
 
