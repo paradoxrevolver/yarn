@@ -19,14 +19,14 @@ public class GameManager : MonoBehaviour {
         // and this GameObject will not be destroyed on scene change.
         if (instance != null && instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
             return;
         }
         else
         {
             instance = this;
         }
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
         
         playerInput = new PlayerInput();
     }
