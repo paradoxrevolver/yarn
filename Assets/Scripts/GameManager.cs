@@ -17,13 +17,16 @@ public class GameManager : MonoBehaviour {
         // Ensures that the GameObject with this script is a Singleton:
         // a duplicate of this script will always be deleted
         // and this GameObject will not be destroyed on scene change.
-        instance = this;
         if (instance != null && instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(this.gameObject);
+        else
+        {
+            instance = this;
+        }
+        DontDestroyOnLoad(gameObject);
         
         playerInput = new PlayerInput();
     }
@@ -34,6 +37,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void OnDisable() {
+        // todo: fix disable issue happening because GameManager is a singleton
         playerInput.Player.Disable();
     }
 
