@@ -111,6 +111,9 @@ public class Contact {
         }
     }
 
+    /*
+     * Disconnects the most recent contact based on yarn tracking.
+     */
     public void UpdateUnraveled(Contact prevContact) {
         var prevYarnLineXZ = prevContact.yarnLineXZ;
         var angleToPrevious = Vector2.SignedAngle(prevYarnLineXZ, yarnLineXZ);
