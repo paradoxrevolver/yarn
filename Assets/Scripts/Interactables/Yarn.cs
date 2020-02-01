@@ -87,12 +87,21 @@ public class Yarn : Interactable {
         // update the potential contacts list, adding new proceeding contacts if necessary.
         for(var i = 0; i < contacts.Count - 1; i++)
             contacts[i].UpdatePotentialContacts(contacts[i + 1], i);
+
+        // Delete unravelled contacts
+        //for (var i = 1; i < contacts.Count - 1; i++)
+        //    contacts[i].UpdateUnraveled(contacts[i - 1]);
     }
+
 
     public override void Interact() {
         // the player picks up the yarn if they have their arms free
         if (playerManager.CheckState(PlayerManager.State.Normal)) {
             PickUp();
+        }
+        else if(playerManager.CheckState(PlayerManager.State.Pulling))
+        {
+            PutDown();
         }
     }
 

@@ -92,6 +92,7 @@ public class LevelManager : MonoBehaviour
 
         // Display "Level Failed"
         // Probably calling a gameManager function
+        // Send data that level is complete to game manager
     }
 
     void LevelNormal()
