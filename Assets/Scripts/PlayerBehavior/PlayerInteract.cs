@@ -2,18 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerInteract : MonoBehaviour {
     
     private PlayerInput playerInput;
+    private PlayerManager playerManager;
     private List<Interactable> interactables;
 
     private void Awake() {
         playerInput = new PlayerInput();
+        playerManager = GetComponent<PlayerManager>();
+        
         playerInput.Player.Fire.started += OnInteract;
-        playerInput.Player.Enable();
+        SceneManager.sceneLoaded += (scene, mode) => {
+            interactables.Clear();
+        };
+        
         
         interactables = new List<Interactable>();
+    }
+    
+    private void OnEnable() {
+        playerInput.Player.Enable();
     }
 
     private void Update() { 
@@ -32,8 +43,11 @@ public class PlayerInteract : MonoBehaviour {
     public void RemoveInteractable(Interactable i) { interactables.Remove(i); }
 
     private void OnInteract(InputAction.CallbackContext ctx) {
-        if(interactables.Count > 0)
+        if (interactables.Count > 0) {
             TopInteractable().Interact();
+        } else if (playerManager.CheckState(PlayerManager.State.Holding)) {
+            playerManager.YarnHeld.PutDown();
+        }
     }
 }
 

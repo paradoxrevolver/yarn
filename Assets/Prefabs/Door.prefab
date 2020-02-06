@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2f8b307942c4004a5e2cb6150084401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goToLevel: 
 --- !u!65 &1239185254020451409
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -64,11 +65,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1239185254202489153}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 72aed8bd2f558f347947868ea0e1309b,
-        type: 3}
-      propertyPath: m_Name
-      value: Mesh
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 72aed8bd2f558f347947868ea0e1309b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -134,16 +130,21 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 0.7
       objectReference: {fileID: 0}
-    - target: {fileID: 4063835366044962077, guid: 72aed8bd2f558f347947868ea0e1309b,
+    - target: {fileID: -927199367670048503, guid: 72aed8bd2f558f347947868ea0e1309b,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 15d3fc69bd0d2f3438c7cd6ef848312b, type: 2}
+      propertyPath: m_Name
+      value: Mesh
+      objectReference: {fileID: 0}
     - target: {fileID: -113181020801827196, guid: 72aed8bd2f558f347947868ea0e1309b,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 952cdf1a1f9e15b47acfa8a8c1fec360, type: 2}
+    - target: {fileID: 4063835366044962077, guid: 72aed8bd2f558f347947868ea0e1309b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 15d3fc69bd0d2f3438c7cd6ef848312b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72aed8bd2f558f347947868ea0e1309b, type: 3}
 --- !u!1 &7067156592082768359 stripped
