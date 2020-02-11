@@ -49,6 +49,14 @@ public class PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""1e0ccc30-d13a-44ca-a9ed-f779500b526e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -249,6 +257,17 @@ public class PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Restart"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da6cb014-72d4-4a39-a659-6577292d9306"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -341,6 +360,14 @@ public class PlayerInput : IInputActionCollection, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""a73f7e27-b5e3-4e8f-a13c-8fa58e77798f"",
                     ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""f70cd7de-b687-4b55-b27c-c8e7e5ff8d8b"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -609,6 +636,17 @@ public class PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""TrackedDeviceSelect"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""775c2f43-19ee-438f-83b2-9e01ef011b13"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -671,6 +709,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Restart = m_Player.FindAction("Restart", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -684,6 +723,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_TrackedDeviceSelect = m_UI.FindAction("TrackedDeviceSelect", throwIfNotFound: true);
+        m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -737,6 +777,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Restart;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private PlayerInput m_Wrapper;
@@ -745,6 +786,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Restart => m_Wrapper.m_Player_Restart;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -766,6 +808,9 @@ public class PlayerInput : IInputActionCollection, IDisposable
                 Restart.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRestart;
                 Restart.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRestart;
                 Restart.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRestart;
+                Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -782,6 +827,9 @@ public class PlayerInput : IInputActionCollection, IDisposable
                 Restart.started += instance.OnRestart;
                 Restart.performed += instance.OnRestart;
                 Restart.canceled += instance.OnRestart;
+                Pause.started += instance.OnPause;
+                Pause.performed += instance.OnPause;
+                Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -801,6 +849,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_TrackedDeviceSelect;
+    private readonly InputAction m_UI_Pause;
     public struct UIActions
     {
         private PlayerInput m_Wrapper;
@@ -816,6 +865,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
         public InputAction @TrackedDeviceSelect => m_Wrapper.m_UI_TrackedDeviceSelect;
+        public InputAction @Pause => m_Wrapper.m_UI_Pause;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -858,6 +908,9 @@ public class PlayerInput : IInputActionCollection, IDisposable
                 TrackedDeviceSelect.started -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceSelect;
                 TrackedDeviceSelect.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceSelect;
                 TrackedDeviceSelect.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceSelect;
+                Pause.started -= m_Wrapper.m_UIActionsCallbackInterface.OnPause;
+                Pause.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnPause;
+                Pause.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -895,6 +948,9 @@ public class PlayerInput : IInputActionCollection, IDisposable
                 TrackedDeviceSelect.started += instance.OnTrackedDeviceSelect;
                 TrackedDeviceSelect.performed += instance.OnTrackedDeviceSelect;
                 TrackedDeviceSelect.canceled += instance.OnTrackedDeviceSelect;
+                Pause.started += instance.OnPause;
+                Pause.performed += instance.OnPause;
+                Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -941,6 +997,7 @@ public class PlayerInput : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnRestart(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -955,5 +1012,6 @@ public class PlayerInput : IInputActionCollection, IDisposable
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnTrackedDeviceSelect(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }
