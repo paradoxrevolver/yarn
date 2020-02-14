@@ -1,11 +1,13 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Yarn : Interactable {
     public Vector3 positionYarnInPlayersArms;
+    public LineRenderer lineRenderer;
 
     private LevelManager levelManager;
-    
+
     public enum State {
         Normal,
         Destroyed,
@@ -15,8 +17,7 @@ public class Yarn : Interactable {
     public bool IsDestroyed() { return state == State.Destroyed; }
     
     /**
-     * A Contact represents a single node in the list of objects that
-     * this Yarn object is connected to.
+     * The Yarn object maintains a list of Contacts to know what it has been wrapped around
      */
     private List<Contact> contacts;
     
@@ -69,6 +70,16 @@ public class Yarn : Interactable {
         levelManager = FindObjectOfType<LevelManager>();
     }
 
+    private void Update() {
+        // update the points the LineRenderer is rendering
+        if (lineRenderer) {
+            var linePoints = new List<Vector3>();
+            foreach (var c in contacts) linePoints.AddRange(c.renderPoints);
+            lineRenderer.positionCount = linePoints.Count;
+            lineRenderer.SetPositions(linePoints.ToArray());
+        }
+    }
+
     private void FixedUpdate() { UpdateAllContacts(); }
 
     private void UpdateAllContacts() {
@@ -86,22 +97,13 @@ public class Yarn : Interactable {
         
         // update the potential contacts list, adding new proceeding contacts if necessary.
         for(var i = 0; i < contacts.Count - 1; i++)
-            contacts[i].UpdatePotentialContacts(contacts[i + 1], i);
-
-        // Delete unravelled contacts
-        //for (var i = 1; i < contacts.Count - 1; i++)
-        //    contacts[i].UpdateUnraveled(contacts[i - 1]);
+            contacts[i].UpdateCandidates(contacts[i + 1], i);
     }
-
 
     public override void Interact() {
         // the player picks up the yarn if they have their arms free
         if (playerManager.CheckState(PlayerManager.State.Normal)) {
             PickUp();
-        }
-        else if(playerManager.CheckState(PlayerManager.State.Pulling))
-        {
-            PutDown();
         }
     }
 
@@ -113,16 +115,21 @@ public class Yarn : Interactable {
         AddContact(player.gameObject);
         playerManager.SetState(PlayerManager.State.Holding);
         playerManager.YarnHeld = this;
+        playerInteract.RemoveInteractable(this);
         transform.SetParent(player.transform);
         transform.localPosition = positionYarnInPlayersArms;
         print("The player just picked up some yarn.");
     }
 
-    private void PutDown() {
+    public void PutDown() {
         playerManager.SetState(PlayerManager.State.Normal);
         playerManager.YarnHeld = null;
         transform.parent = null;
-        transform.localPosition = player.transform.localPosition;
+        Vector3 positionOnGround = new Vector3(
+            Mathf.Round(player.transform.localPosition.x/2f)*2f,
+            0,
+            Mathf.Round(player.transform.localPosition.z/2f)*2f);
+        transform.localPosition = positionOnGround;
         print("The player has dropped the yarn.");
     }
 
@@ -135,7 +142,7 @@ public class Yarn : Interactable {
     }
     
     /* Ties this Yarn off on the given Pushpin, removing control from the player. */
-    public void TieOff(Pushpin pushpin) {
+    public void TieTo(Pushpin pushpin) {
         playerManager.SetState(PlayerManager.State.Normal);
         RemoveContactFromEnd(player);
         AddContact(pushpin.gameObject);
