@@ -37,8 +37,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void OnDisable() {
-        // todo: fix disable issue happening because GameManager is a singleton
-        playerInput.Player.Disable();
+        playerInput?.Player.Disable();
     }
 
     /**

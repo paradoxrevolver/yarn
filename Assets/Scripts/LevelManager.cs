@@ -33,7 +33,8 @@ public class LevelManager : MonoBehaviour
         yarnArray = GameObject.FindGameObjectsWithTag("Yarn");
 
         allContactables = new HashSet<Contactable>(FindObjectsOfType<Contactable>());
-        // levelCompleteUI.gameObject.SetActive(true);
+        //Util.PrintList(allContactables);
+        //levelCompleteUI.gameObject.SetActive(true);
     }
 
     

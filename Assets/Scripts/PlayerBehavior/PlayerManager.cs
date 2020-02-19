@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class PlayerManager : MonoBehaviour
         Holding,
         Pulling,
     }
+
+    private const State DEFAULT_STATE = State.Normal;
     private State state;
 
     public GameObject normalMesh;
@@ -16,17 +19,17 @@ public class PlayerManager : MonoBehaviour
 
     public Yarn YarnHeld { get; set; }
 
-    private void Awake() {
-        SetState(State.Normal);
+    private void Start() {
+        SetState(DEFAULT_STATE);
     }
 
     public void SetState(State state) {
         this.state = state;
-        UpdateMeshFromState();
+        UpdateFromState();
     }
     public bool CheckState(State state) { return state == this.state; }
 
-    private void UpdateMeshFromState() {
+    private void UpdateFromState() {
         if (CheckState(State.Normal)) {
             if(normalMesh) normalMesh.SetActive(true);
             if(holdingMesh) holdingMesh.SetActive(false);
