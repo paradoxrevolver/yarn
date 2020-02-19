@@ -8,6 +8,27 @@
  * A Contactable is responsible for containing the sort of information that a Contact would
  * need if this GameObject became a Contact.
  */
-public class Contactable : MonoBehaviour {
+public abstract class Contactable : MonoBehaviour {
+    /**
+     * Returns a new Contact object that represents this Contactable.
+     */
+    public Contact GetContact() {
+        return new Contact();
+    }
+}
+
+/**
+ * If a Yarn object wrapping around this Contactable should send a Contact to that Yarn,
+ * put this Behaviour on that GameObject.
+ */
+public class WrapContactable : Contactable {
+    
+}
+
+/**
+ * If the player interacting with this Contactable should send a Contact to the player,
+ * put this Behaviour on that GameObject.
+ */
+public class InteractContactable : Contactable {
     
 }

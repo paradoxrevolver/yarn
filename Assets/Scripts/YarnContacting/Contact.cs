@@ -7,8 +7,8 @@ public class Contact {
     // this Contact is in this Yarn's contacts list
     public Yarn yarn;
     
-    // this Contact's GameObject
-    public GameObject source;
+    // the Contactable that this Contact points to
+    public Contactable source;
     
     private LevelManager levelManager;
     
@@ -31,7 +31,7 @@ public class Contact {
     // a list of candidates that this Contact might turn into a proceeding contact
     public Dictionary<Contactable, Candidate> candidates;
 
-    public Contact(Yarn yarn, GameObject source, LevelManager levelManager, float initialAngle) {
+    public Contact(Yarn yarn, Contactable source, LevelManager levelManager, float initialAngle) {
         this.yarn = yarn;
         this.source = source;
         this.levelManager = levelManager;
