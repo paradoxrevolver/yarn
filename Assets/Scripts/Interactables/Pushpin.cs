@@ -47,7 +47,7 @@ public class Pushpin : Interactable {
                 // finish a line of yarn
                 state = State.Tied;
                 connectedYarn = playerYarn;
-                connectedYarn.TieOff(this);
+                connectedYarn.TieTo(this);
                 print("Yarn was just tied to a Pushpin, ending a line.");
             }
         }

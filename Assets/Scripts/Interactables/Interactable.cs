@@ -8,6 +8,7 @@
 public abstract class Interactable : MonoBehaviour {
     protected GameObject player;
     protected PlayerManager playerManager;
+    protected PlayerInteract playerInteract;
     
     // Sets the dimensions of the collider and offset from center of this GameObject
     private Vector3 colliderDim = new Vector3(2, 2, 2);
@@ -17,6 +18,7 @@ public abstract class Interactable : MonoBehaviour {
     protected virtual void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
         playerManager = player.GetComponent<PlayerManager>();
+        playerInteract = player.GetComponent<PlayerInteract>();
         
         // place a trigger region on this Interactable
         boxCollider = gameObject.AddComponent<BoxCollider>();
@@ -32,14 +34,14 @@ public abstract class Interactable : MonoBehaviour {
     public abstract void Interact();
 
     private void OnTriggerEnter(Collider other) {
-        if (other.gameObject.CompareTag("Player")) {
-            other.gameObject.GetComponent<PlayerInteract>().AddInteractable(this);
+        if (other.CompareTag("Player")) {
+            other.GetComponent<PlayerInteract>().AddInteractable(this);
         }
     }
 
     private void OnTriggerExit(Collider other) {
-        if (other.gameObject.CompareTag("Player")) {
-            other.gameObject.GetComponent<PlayerInteract>().RemoveInteractable(this);
+        if (other.CompareTag("Player")) {
+            other.GetComponent<PlayerInteract>().RemoveInteractable(this);
         }
     }
 }

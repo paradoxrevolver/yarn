@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Contact {
@@ -27,12 +28,16 @@ public class Contact {
     // a list of calculated points that the yarn is actually rendered at
     public List<Vector3> renderPoints;
 
+    // a list of candidates that this Contact might turn into a proceeding contact
+    public Dictionary<Contactable, Candidate> candidates;
+
     public Contact(Yarn yarn, GameObject source, LevelManager levelManager, float initialAngle) {
         this.yarn = yarn;
         this.source = source;
         this.levelManager = levelManager;
         this.initialAngle = initialAngle;
         renderPoints = new List<Vector3>();
+        candidates = new Dictionary<Contactable, Candidate>();
         UpdateRenderPoints();
     }
 
@@ -55,52 +60,54 @@ public class Contact {
     }
     
     /*
-     * Updates the potential contacts list for this Contact.
+     * Updates the list of Candidates that this Contact is watching.
      *
-     * If a potential contact's angle and radius changes in a way that suggests it
-     * crossed over the line this Contact owns, this Contact will be responsible for
-     * adding it as a new Contact to the yarn line.
+     * If a Candidate has changed in some way this update that suggests it should
+     * become a new Contact, this Contact will add it.
      */
-    public void UpdatePotentialContacts(Contact nextContact, int index) {
+    public void UpdateCandidates(Contact nextContact, int index) {
         if (nextContact == null) return;
         
-        // select only the Contactables which are actually candidates
-        HashSet<Contactable> newPotential = new HashSet<Contactable>();
+        /*
+         * Create a new list of candidates. 
+         */
+        Dictionary<Contactable, Candidate> newCandidates = new Dictionary<Contactable, Candidate>();
         foreach (var c in levelManager.allContactables) {
             if (c.gameObject != source 
                 && c.gameObject != nextContact.source
                 && c.enabled) {
-                newPotential.Add(c);
+                newCandidates.Add(c, new Candidate(this, c));
             }
         }
         
         /*
-         * for each Contactable that we care about this update, check to see if it has an old angle on record.
-         * if it does, we can check to see how that angle has changed since the previous frame.
+         * For each Candidate this Contact cares about this update, check to see if it has an old
+         * record. If it does, check several criteria to see if it changed in a way that makes it
+         * deserve to become a Contact. If it doesn't, 
          */
-        foreach (var c in newPotential) {
-            var oldPC = c.GetPotentialContact(this);
-            var newPC = new Contactable.PotentialContact(this, c);
+        foreach (var candidate in newCandidates) {
+            var oldCandidate = GetCandidate(candidate.Key);
+            var newCandidate = candidate.Value;
             
-            if (!oldPC.Equals(default(Contactable.PotentialContact))) {
-                // so we found an old record of this potential contact. cool.
+            if (!oldCandidate.Equals(default(Candidate))) {
+                // so we found an old record of this candidate. cool.
                 // get the angles of both of these
-                var oldAngle = oldPC.parentAngle;
-                var newAngle = newPC.parentAngle;
-                var newRadius = newPC.parentRadius;
+                var oldAngle = oldCandidate.parentAngle;
+                var newAngle = newCandidate.parentAngle;
+                var newRadius = newCandidate.parentRadius;
                 
-                // has this Contactable rotated in a way that crossed over this Contact's angle?
-                // and is this Contactable now within distance of this Contact's line?
+                // has this Candidate rotated in a way that crossed over this Contact's angle?
+                // and is this Candidate now within distance of this Contact's line?
                 // and is the new angle close-ish to zero so we aren't connecting backwards?
                 if (oldAngle * newAngle < 0 
                         && newRadius < yarnLineXZ.magnitude
                         && Math.Abs(newAngle) < 90) {
-                    // in that case, this potential contact becomes a new contact
-                    yarn.InsertContact(newPC.source.gameObject, index + 1, newAngle);
+                    // if all of this is true, this candidate becomes a new contact
+                    yarn.InsertContact(newCandidate.source.gameObject, index + 1, newAngle);
                 }
             }
-            // update, or add for the first time, the newer potential contact.
-            c.AddPotentialContact(this, newPC);
+            // update the list of candidates, deleting the old ones
+            candidates = newCandidates;
         }
     }
 
@@ -114,6 +121,44 @@ public class Contact {
                 && Math.Abs(angleToPrevious) < 90) {
             yarn.RemoveContact(this);
             // todo: does this delete this contact properly?
+        }
+    }
+
+    private Candidate GetCandidate(Contactable c) {
+        return candidates.ContainsKey(c) ? candidates[c] : default;
+    }
+    
+    /**
+     * A Candidate is created by a currently existing Contact somewhere in the scene
+     * because it cares about this Contactable's angle to it.
+     */
+    public struct Candidate {
+        /*
+         * the Contact that is interested in the details of this Candidate
+         */
+        public Contact parent;
+        
+        // the Contactable behind this Candidate
+        public Contactable source;
+        
+        // the angle this Contactable has with the parent Contact
+        public float parentAngle;
+        public float parentRadius;
+
+        public Candidate(Contact parent, Contactable source) {
+            this.parent = parent;
+            this.source = source;
+            
+            /*
+             * get the signed angle between the parent Contact's yarnLineXZ
+             * and the line between the parent and this Contactable
+             */
+            var parentPos = parent.renderPoints[parent.renderPoints.Count - 1];
+            var sourcePos = source.transform.position;
+            var vecParentToThis = sourcePos - parentPos;
+            var vecParentToThisXZ = new Vector2(vecParentToThis.x, vecParentToThis.z);
+            parentAngle = Vector2.SignedAngle(parent.yarnLineXZ, vecParentToThisXZ);
+            parentRadius = vecParentToThisXZ.magnitude;
         }
     }
 }

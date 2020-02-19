@@ -18,18 +18,23 @@ public class LevelManager : MonoBehaviour
     private GameObject[] yarnArray;
     public HashSet<Contactable> allContactables;
 
+    public RectTransform levelCompleteUI;
+    public RectTransform levelFailedUI;
+
     // private int push_pin_count = GameManager.getPushPinCount();
     // private int push_pin_complete_count;
     // private int yarn_string_state;
 
     // Start is called before the first frame update
     void Awake() {
-        state = State.Normal;
+        LevelNormal();
         
         pushpinArray = GameObject.FindGameObjectsWithTag("Pushpin");
         yarnArray = GameObject.FindGameObjectsWithTag("Yarn");
 
         allContactables = new HashSet<Contactable>(FindObjectsOfType<Contactable>());
+        //Util.PrintList(allContactables);
+        //levelCompleteUI.gameObject.SetActive(true);
     }
 
     
@@ -77,11 +82,13 @@ public class LevelManager : MonoBehaviour
                 pushpinsDone = false;
         }
         if (pushpinsDone) LevelComplete();
+        else LevelNormal();
     }
 
     void LevelComplete()
     {
         state = State.Won;
+        levelCompleteUI.gameObject.SetActive(true);
         // Display "Level Complete"
         // Probably calling a gameManager function
     }
@@ -89,6 +96,8 @@ public class LevelManager : MonoBehaviour
     void LevelFailed()
     {
         state = State.Lost;
+        levelFailedUI.gameObject.SetActive(true);
+        
 
         // Display "Level Failed"
         // Probably calling a gameManager function
@@ -97,6 +106,9 @@ public class LevelManager : MonoBehaviour
 
     void LevelNormal()
     {
+        levelCompleteUI.gameObject.SetActive(false);
+        levelFailedUI.gameObject.SetActive(false);
+
         state = State.Normal;
 
         // If showing a display, turn off display and continue game
