@@ -46,4 +46,9 @@ public class GameManager : MonoBehaviour {
     private void OnRestart(InputAction.CallbackContext ctx) {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public void StartHubWorld()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
 }

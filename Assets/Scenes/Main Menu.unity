@@ -339,7 +339,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000012159, y: -0.0000061989}
+  m_AnchoredPosition: {x: -0.000012159, y: -0}
   m_SizeDelta: {x: 342.2, y: 245.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &516338978
@@ -351,7 +351,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 516338976}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c401fbdb310cca4294a28ed8a38943c, type: 3}
+  m_Script: {fileID: 11500000, guid: 80a4fa5f48e3092439c55b7b747a7454, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &733977103
@@ -366,7 +366,7 @@ GameObject:
   - component: {fileID: 733977106}
   - component: {fileID: 733977105}
   m_Layer: 5
-  m_Name: Select Level
+  m_Name: HubWorld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -422,7 +422,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Select Level
+  m_Text: Hub World
 --- !u!222 &733977106
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -444,7 +444,7 @@ GameObject:
   - component: {fileID: 1202246667}
   - component: {fileID: 1202246666}
   m_Layer: 5
-  m_Name: Select Button
+  m_Name: HubWorld Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -512,7 +512,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1202246667}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 516338978}
+        m_MethodName: StartHubWorld
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1202246667
 MonoBehaviour:
   m_ObjectHideFlags: 0
