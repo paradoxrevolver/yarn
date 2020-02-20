@@ -91,6 +91,10 @@ public class LevelManager : MonoBehaviour
         levelCompleteUI.gameObject.SetActive(true);
         // Display "Level Complete"
         // Probably calling a gameManager function
+        // The level complete function must show buttons to continue or go back to level
+        // Once you beat a level, if the next level is still locked, unlock it.  Else, do nothing (if statement)
+        // Button nextLevel will let player go to next level
+        // Alternatively, go back to hub world
     }
 
     void LevelFailed()
@@ -102,6 +106,8 @@ public class LevelManager : MonoBehaviour
         // Display "Level Failed"
         // Probably calling a gameManager function
         // Send data that level is complete to game manager
+        // UI:  prompt for redo, call level reset
+        // Alternatively, go back to hub world
     }
 
     void LevelNormal()
