@@ -1,164 +1,101 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
-public class Contact {
-    // this Contact is in this Yarn's contacts list
-    public Yarn yarn;
+/**
+ * A Contact is a single instance of a Yarn object being connected to something.
+ *
+ * Only Contactables can create Contacts of themselves.
+ */
+public abstract class Contact {
+    // uses host for GameObject data and Transform
+    public Contactable host { get; protected set; }
     
-    // the Contactable that this Contact points to
-    public Contactable source;
+    // needs prev and nextContacts for calculating angles
+    public Contact prevContact { get; set; }
+    public Contact nextContact { get; set; }
     
-    private LevelManager levelManager;
-    
-    /*
-     * the line that this Contact is responsible for checking.
-     * leaves from this Contact's last renderPoint and goes to the first
-     * renderPoint in the next Contact.
-     *
-     * note that this value may be null if this Contact has no next Contact.
-     */
-    public Vector3 yarnLine;
-    public Vector2 yarnLineXZ;
+    // render points describe how the yarn is visually connected to this Contact
+    public List<Vector3> renderPoints { get; protected set; }
+    public Vector3 headRenderPoint => renderPoints[0];
+    public Vector3 tailRenderPoint => renderPoints[renderPoints.Count-1];
 
-    // the initial angular velocity the player had when this Contact was created
-    private float initialAngle;
-    
-    // a list of calculated points that the yarn is actually rendered at
-    public List<Vector3> renderPoints;
-
-    // a list of candidates that this Contact might turn into a proceeding contact
-    public Dictionary<Contactable, Candidate> candidates;
-
-    public Contact(Yarn yarn, Contactable source, LevelManager levelManager, float initialAngle) {
-        this.yarn = yarn;
-        this.source = source;
-        this.levelManager = levelManager;
-        this.initialAngle = initialAngle;
-        renderPoints = new List<Vector3>();
-        candidates = new Dictionary<Contactable, Candidate>();
-        UpdateRenderPoints();
-    }
-
-    /* Update the render points for this Contact. */
-    public void UpdateRenderPoints() {
-        // todo: show render points properly by using values from Contactable class
-        renderPoints.Clear();
-        renderPoints.Add(source.transform.position);
-    }
-
-    /* Update the line that this Contact has to the nextContact following it. */
-    public void UpdateLine(Contact nextContact) {
-        // next contact must exist to find values for it!
-        if (nextContact == null) return;
-        
-        // update the values this Contact has with the next Contact.
-        // use render points to determine this.
-        yarnLine = nextContact.renderPoints[0] - renderPoints[renderPoints.Count - 1];
-        yarnLineXZ = new Vector2(yarnLine.x, yarnLine.z);
-    }
-    
-    /*
-     * Updates the list of Candidates that this Contact is watching.
-     *
-     * If a Candidate has changed in some way this update that suggests it should
-     * become a new Contact, this Contact will add it.
-     */
-    public void UpdateCandidates(Contact nextContact, int index) {
-        if (nextContact == null) return;
-        
-        /*
-         * Create a new list of candidates. 
-         */
-        Dictionary<Contactable, Candidate> newCandidates = new Dictionary<Contactable, Candidate>();
-        foreach (var c in levelManager.allContactables) {
-            if (c.gameObject != source 
-                && c.gameObject != nextContact.source
-                && c.enabled) {
-                newCandidates.Add(c, new Candidate(this, c));
+    // the vector entering this Contact from a previous Contact
+    public Vector3 arrivingVector {
+        get {
+            if (prevContact == null) {
+                Debug.LogError($"{host.name} is hosting a Contact that was asked for an arriving vector, " +
+                               $"but this Contact has no previous Contact!");
             }
+            return headRenderPoint - prevContact.tailRenderPoint;
         }
-        
-        /*
-         * For each Candidate this Contact cares about this update, check to see if it has an old
-         * record. If it does, check several criteria to see if it changed in a way that makes it
-         * deserve to become a Contact. If it doesn't, 
-         */
-        foreach (var candidate in newCandidates) {
-            var oldCandidate = GetCandidate(candidate.Key);
-            var newCandidate = candidate.Value;
-            
-            if (!oldCandidate.Equals(default(Candidate))) {
-                // so we found an old record of this candidate. cool.
-                // get the angles of both of these
-                var oldAngle = oldCandidate.parentAngle;
-                var newAngle = newCandidate.parentAngle;
-                var newRadius = newCandidate.parentRadius;
-                
-                // has this Candidate rotated in a way that crossed over this Contact's angle?
-                // and is this Candidate now within distance of this Contact's line?
-                // and is the new angle close-ish to zero so we aren't connecting backwards?
-                if (oldAngle * newAngle < 0 
-                        && newRadius < yarnLineXZ.magnitude
-                        && Math.Abs(newAngle) < 90) {
-                    // if all of this is true, this candidate becomes a new contact
-                    yarn.InsertContact(newCandidate.source.gameObject, index + 1, newAngle);
-                }
+    }
+
+    // the vector leaving this Contact to the next Contact
+    public Vector3 leavingVector {
+        get {
+            if (prevContact == null) {
+                Debug.LogError($"{host.name} is hosting a Contact that was asked for a leaving vector, " +
+                               $"but this Contact has no next Contact!");
             }
-            // update the list of candidates, deleting the old ones
-            candidates = newCandidates;
+            return nextContact.headRenderPoint - tailRenderPoint;
         }
     }
 
-    /*
-     * Disconnects the most recent contact based on yarn tracking.
-     */
-    public void UpdateUnraveled(Contact prevContact) {
-        var prevYarnLineXZ = prevContact.yarnLineXZ;
-        var angleToPrevious = Vector2.SignedAngle(prevYarnLineXZ, yarnLineXZ);
-        if (angleToPrevious * initialAngle < 0
-                && Math.Abs(angleToPrevious) < 90) {
-            yarn.RemoveContact(this);
-            // todo: does this delete this contact properly?
-        }
-    }
-
-    private Candidate GetCandidate(Contactable c) {
-        return candidates.ContainsKey(c) ? candidates[c] : default;
-    }
-    
     /**
-     * A Candidate is created by a currently existing Contact somewhere in the scene
-     * because it cares about this Contactable's angle to it.
+     * Updates all of this Contact's data based on the position of the nextContact.
+     *
+     * It's assumed that the nextContact is a fluidly moving GameObject, so all calculations
+     * are performed between previous and upcoming data.
      */
-    public struct Candidate {
-        /*
-         * the Contact that is interested in the details of this Candidate
-         */
-        public Contact parent;
-        
-        // the Contactable behind this Candidate
-        public Contactable source;
-        
-        // the angle this Contactable has with the parent Contact
-        public float parentAngle;
-        public float parentRadius;
+    public abstract void Update(Contact nextContact);
+}
 
-        public Candidate(Contact parent, Contactable source) {
-            this.parent = parent;
-            this.source = source;
-            
-            /*
-             * get the signed angle between the parent Contact's yarnLineXZ
-             * and the line between the parent and this Contactable
-             */
-            var parentPos = parent.renderPoints[parent.renderPoints.Count - 1];
-            var sourcePos = source.transform.position;
-            var vecParentToThis = sourcePos - parentPos;
-            var vecParentToThisXZ = new Vector2(vecParentToThis.x, vecParentToThis.z);
-            parentAngle = Vector2.SignedAngle(parent.yarnLineXZ, vecParentToThisXZ);
-            parentRadius = vecParentToThisXZ.magnitude;
-        }
+public class CircleContact : Contact {
+    // how many times has this CircleContact been wrapped around?
+    public int rotations { get; }
+    // what angle does this CircleContact's line leave at compared to its initial angle?
+    public float angle { get; }
+
+    /**
+     * A CircleContact can only be created once:
+     * - We know the Contactable that is hosting the CircleContact
+     * - We know the initial render point that caused the CircleContact
+     * - We know the initial angle of contact so we can tell which way yarn is wrapping
+     * - We may know the previous Contact or the next Contact
+     */
+    public CircleContact(
+            WrapContactable host, 
+            Vector3 initialPoint, 
+            float initialAngle, 
+            Contact prevContact = null,
+            Contact nextContact = null) {
+        this.host = host;
+        this.prevContact = prevContact;
+        this.nextContact = nextContact;
+        // render points always has at least one point in it, it may never be empty
+        renderPoints = new List<Vector3>{initialPoint};
+        rotations = 0;
+        angle = initialAngle;
+    }
+
+    public override void Update(Contact nextContact) {
+        
+    }
+}
+
+public class PointContact : Contact {
+    public PointContact(
+            InteractContactable host,
+            Contact prevContact = null,
+            Contact nextContact = null) {
+        this.host = host;
+        this.prevContact = prevContact;
+        this.nextContact = nextContact;
+        renderPoints = new List<Vector3>{host.transform.position + host.pointOffset};
+    }
+
+    public override void Update(Contact nextContact) {
+        
     }
 }
