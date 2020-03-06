@@ -7,11 +7,12 @@ using UnityEngine;
 public class YarnLine {
     // the head and tail contacts are always PointContacts
     private PointContact head, tail;
+
     // every other contact in the list is some sort of Contact
     private List<Contact> wraps;
 
     private Yarn host;
-    
+
     public List<Contact> contacts { get; private set; }
     public List<Vector3> renderPoints { get; private set; }
 
@@ -36,24 +37,22 @@ public class YarnLine {
             var contact = contacts[i];
         }
     }
-    
+
     /**
      * Updates the line of yarn visually, after physics calculation have been performed
      */
-    public void Update() {
-        
-    }
-    
+    public void Update() { }
+
     /* Fires whenever the structure of the line changes. */
     public void OnLineChanged() {
         // update the contacts list
-        List<Contact> newContacts = new List<Contact>(wraps.Count + 2){tail};
+        List<Contact> newContacts = new List<Contact>(wraps.Count + 2) {tail};
         newContacts.AddRange(wraps);
         newContacts.Add(head);
         contacts = newContacts;
-        
+
         // update the renderpoints based on changed contacts
-        
+
     }
 
     public void Add(Contact contact) {
@@ -61,12 +60,13 @@ public class YarnLine {
         OnLineChanged();
     }
 
-    public int RemoveAll(Contact contact) {
-        int result = wraps.RemoveAll(wrap => wrap.host.gameObject.Equals(contact.host.gameObject));
+    public int RemoveAll(Contact contact) { return RemoveAll(contact.host.gameObject); }
+    public int RemoveAll(GameObject gameObject) {
+        int result = wraps.RemoveAll(wrap => wrap.host.gameObject.Equals(gameObject));
         OnLineChanged();
         return result;
     }
-    
+
     /**
      * If you try to give this function a Player's Contact, it will flip the entire list
      * to ensure the Player is at the tail.

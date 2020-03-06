@@ -1,10 +1,15 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
-{
+public class PlayerManager : MonoBehaviour {
+    
+    public GameObject normalMesh;
+    public GameObject holdingMesh;
+
+    public Yarn yarnHeld { get; set; }
+    
+    public PlayerContactable playerContactable { get; protected set; }
+    
     public enum State {
         Normal,
         Holding,
@@ -14,13 +19,9 @@ public class PlayerManager : MonoBehaviour
     private const State DEFAULT_STATE = State.Normal;
     private State state;
 
-    public GameObject normalMesh;
-    public GameObject holdingMesh;
-
-    public Yarn YarnHeld { get; set; }
-
-    private void Start() {
+    private void Awake() {
         SetState(DEFAULT_STATE);
+        playerContactable = GetComponent<PlayerContactable>();
     }
 
     public void SetState(State state) {

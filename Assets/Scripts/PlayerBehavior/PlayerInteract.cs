@@ -14,17 +14,21 @@ public class PlayerInteract : MonoBehaviour {
         playerInput = new PlayerInput();
         playerManager = GetComponent<PlayerManager>();
         
-        playerInput.Player.Fire.started += OnInteract;
         SceneManager.sceneLoaded += (scene, mode) => {
             interactables.Clear();
         };
-        
         
         interactables = new List<Interactable>();
     }
     
     private void OnEnable() {
+        playerInput.Player.Fire.started += OnInteract;
         playerInput.Player.Enable();
+    }
+
+    private void OnDisable() {
+        playerInput.Player.Fire.started -= OnInteract;
+        playerInput.Player.Disable();
     }
 
     private void Update() { 
@@ -44,9 +48,9 @@ public class PlayerInteract : MonoBehaviour {
 
     private void OnInteract(InputAction.CallbackContext ctx) {
         if (interactables.Count > 0) {
-            TopInteractable().Interact();
+            TopInteractable().Interact(playerManager);
         } else if (playerManager.CheckState(PlayerManager.State.Holding)) {
-            playerManager.YarnHeld.PutDown();
+            playerManager.yarnHeld.PutDown();
         }
     }
 }

@@ -16,10 +16,6 @@ public abstract class Interactable : MonoBehaviour {
     private BoxCollider boxCollider;
 
     protected virtual void Awake() {
-        player = GameObject.FindGameObjectWithTag("Player");
-        playerManager = player.GetComponent<PlayerManager>();
-        playerInteract = player.GetComponent<PlayerInteract>();
-        
         // place a trigger region on this Interactable
         boxCollider = gameObject.AddComponent<BoxCollider>();
         boxCollider.isTrigger = true;
@@ -31,7 +27,11 @@ public abstract class Interactable : MonoBehaviour {
      * Performs an interaction with this Interactable.
      * Should be customized per type of Interactable.
      */
-    public abstract void Interact();
+    public virtual void Interact(PlayerManager player) {
+        this.player = player.gameObject;
+        this.playerManager = player;
+        this.playerInteract = this.player.GetComponent<PlayerInteract>();
+    }
 
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")) {

@@ -29,15 +29,15 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         
         playerInput = new PlayerInput();
-    }
-
-    private void OnEnable() {
         playerInput.Player.Restart.started += OnRestart;
         playerInput.Player.Enable();
     }
-
-    private void OnDisable() {
-        playerInput?.Player.Disable();
+    
+    private void OnDestroy() {
+        if (playerInput != null) {
+            playerInput.Player.Restart.started -= OnRestart;
+            playerInput.Player.Disable();
+        }
     }
 
     /**

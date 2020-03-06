@@ -8,7 +8,7 @@ public class Yarn : Interactable {
     public GameObject mesh;
 
     private LevelManager levelManager;
-    private YarnLine yarnLine;
+    [HideInInspector] public YarnLine yarnLine;
 
     public enum State {
         Normal,
@@ -28,7 +28,7 @@ public class Yarn : Interactable {
     private void FixedUpdate() {
         // update the physics of the yarn line
         //yarnLine?.FixedUpdate();
-        // todo: allow yarn to update
+        // todo: allow yarn to update when things are ready
     }
 
     private void Update() {
@@ -44,7 +44,7 @@ public class Yarn : Interactable {
         }
     }
 
-    public override void Interact() {
+    public override void Interact(PlayerManager player) {
         // the player picks up the yarn if they have their arms free
         if (playerManager.CheckState(PlayerManager.State.Normal)) {
             PickUp();
@@ -58,9 +58,11 @@ public class Yarn : Interactable {
     private void PickUp() {
         // give the player the yarn object and tell them to start holding
         playerManager.SetState(PlayerManager.State.Holding);
-        playerManager.YarnHeld = this;
+        playerManager.yarnHeld = this;
+        
         // this yarn is no longer interactable
         playerInteract.RemoveInteractable(this);
+        
         // parent the yarn to the player and position it in their arms
         transform.SetParent(player.transform);
         transform.localPosition = positionYarnInPlayersArms;
@@ -71,9 +73,11 @@ public class Yarn : Interactable {
     public void PutDown() {
         // return the player to normal, take it from the player
         playerManager.SetState(PlayerManager.State.Normal);
-        playerManager.YarnHeld = null;
+        playerManager.yarnHeld = null;
+        
         // unparent the yarn, pulling it out to the outermost level
         transform.parent = null;
+        
         // calculate a new position for the yarn on the grid and set it there
         Vector3 positionOnGround = new Vector3(
             Mathf.Round(player.transform.localPosition.x/2f)*2f,
@@ -84,19 +88,29 @@ public class Yarn : Interactable {
         print("The player has dropped the yarn.");
     }
     
-    /* Ties this Yarn off on the given Pushpin, removing control from the player. */
-    public void TieTo(Pushpin pushpin) {
+    /* Starts a line of yarn on the given pushpin. */
+    public void TieStart(Pushpin pushpin) {
         playerManager.SetState(PlayerManager.State.Normal);
         if(mesh) HideMesh();
         
-        // todo: switch the pushpin and player
+        yarnLine = new YarnLine(this, playerManager.playerContactable.GetNewContact(), pushpin.interactContactable.GetNewContact());
     }
 
-    /* Untie this Yarn object from the given Pushpin, returning control to the player. */
-    public void UntieFrom(Pushpin pushpin) {
+    /* Finishes off a line of yarn on the given pushpin. */
+    public void TieEnd(Pushpin pushpin) {
+        
+    }
+
+    /* Untie a line of yarn from a pushpin to continue to edit the line. */
+    public void UntieStart(Pushpin pushpin) {
         playerManager.SetState(PlayerManager.State.Pulling);
         if(mesh) ShowMesh();
         
         // todo: remove the pushpin's contact, add the player
+    }
+
+    /* Untie a line of yarn from a pushpin to remove the line. */
+    public void UntieEnd(Pushpin pushpin) {
+        
     }
 }

@@ -85,11 +85,14 @@ public class WrapContactable : Contactable {
      * element 0 being the vector counter-clockwise (negative angle) from vecToCircleCenter and element 1 being
      * the other.
      */
-    private static Vector3[] FindTangentPointsToCircle(Vector3 vecToCircleCenter, float radius) {
+    public static Vector3[] FindTangentPointsToCircle(Vector3 vecToCircleCenter, float radius) {
         // this is the angle between vecToCircleCenter to both tangents
-        float angleToTangents = Mathf.Asin(radius / vecToCircleCenter.magnitude);
-        Vector3 negativeTangent = Quaternion.Euler(0, angleToTangents, 0) * vecToCircleCenter;
-        Vector3 positiveTangent = Quaternion.Euler(0, -angleToTangents, 0) * vecToCircleCenter;
+        float angleToTangents = Mathf.Asin(radius / vecToCircleCenter.magnitude) * Mathf.Rad2Deg;
+        // rotates counter clockwise
+        Vector3 negativeTangent = Quaternion.Euler(0, -angleToTangents, 0) * vecToCircleCenter;
+        // rotates clockwise
+        Vector3 positiveTangent = Quaternion.Euler(0, angleToTangents, 0) * vecToCircleCenter;
+        
         return new [] {
             Vector3.Project(vecToCircleCenter, negativeTangent),
             Vector3.Project(vecToCircleCenter, positiveTangent)
