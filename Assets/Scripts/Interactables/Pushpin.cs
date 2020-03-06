@@ -19,6 +19,8 @@ public class Pushpin : Interactable {
 
     public override void Interact() {
         YarnUpdate();
+        
+        print($"{GetType()} was interacted with, but nothing has been implemented yet.");
     }
 
     /**
@@ -28,13 +30,13 @@ public class Pushpin : Interactable {
     private void YarnUpdate() {
         Yarn playerYarn = playerManager.YarnHeld;
 
-        switch (state) {
+        /*switch (state) {
             /*
              * Yarn can be attached to this Pushpin if:
              * - This Pushpin is Untied to anything
              *     - The player is holding onto yarn, in which case the player wants to start a line of yarn
              *     - The player is pulling yarn, in which case the player wants to finish a line of yarn
-             */
+             #1#
             case State.Untied when playerManager.CheckState(PlayerManager.State.Holding):
                 // start a line of yarn
                 state = State.Tied;
@@ -58,7 +60,7 @@ public class Pushpin : Interactable {
              *         - This Pushpin must be part of this line of yarn AND be the only thing other than the player
              *     - The player is normal, in which case they want to change an existing line of yarn
              *         - This Pushpin must be either the first or last in the line of yarn AND there are at least two contacts
-             */
+             #1#
             case State.Tied:
             case State.Done: {
                 if (playerManager.CheckState(PlayerManager.State.Pulling)
@@ -82,6 +84,6 @@ public class Pushpin : Interactable {
                 }
                 break;
             }
-        }
+        }*/
     }
 }

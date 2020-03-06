@@ -38,7 +38,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8515438956722547815}
   - component: {fileID: 8515438956722547808}
-  - component: {fileID: 6464732955907209868}
+  - component: {fileID: 6561178820540645814}
+  - component: {fileID: 7689935896013740308}
   m_Layer: 0
   m_Name: Needle
   m_TagString: Untagged
@@ -73,7 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98e1c197ea674b5a9a129fd58e6579f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6464732955907209868
+--- !u!114 &6561178820540645814
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -82,9 +83,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 8515438956722547814}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a115767594c2aa643b4a85719c052d96, type: 3}
+  m_Script: {fileID: 11500000, guid: 29aab9a7c4fc6a04e854dffd2cf68812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pastPosition: {x: 0, y: 0, z: 0}
+  currentPosition: {x: 0, y: 0, z: 0}
+  wrapContactables: []
+  radius: 0.1
+--- !u!114 &7689935896013740308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8515438956722547814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb3afdf96468fd04b95c0148819ca2d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pastPosition: {x: 0, y: 0, z: 0}
+  currentPosition: {x: 0, y: 0, z: 0}
+  wrapContactables: []
+  pointOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &8515438957613842491
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -92,11 +113,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8515438956722547815}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 8ed1fafe755612547a4b526e9c6a946d,
-        type: 3}
-      propertyPath: m_Name
-      value: Mesh
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 8ed1fafe755612547a4b526e9c6a946d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -162,6 +178,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 1fa75e2ebacf4c243999e3f7628e4373, type: 2}
+    - target: {fileID: -927199367670048503, guid: 8ed1fafe755612547a4b526e9c6a946d,
+        type: 3}
+      propertyPath: m_Name
+      value: Mesh
+      objectReference: {fileID: 0}
     - target: {fileID: 4063835366044962077, guid: 8ed1fafe755612547a4b526e9c6a946d,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

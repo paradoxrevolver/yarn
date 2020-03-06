@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1293638319414553333}
   - component: {fileID: 1293638319414553339}
-  - component: {fileID: 2956844451186357919}
+  - component: {fileID: 2226853645861646875}
   m_Layer: 0
   m_Name: Nail
   m_TagString: Untagged
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4e97f2fe5cdf848bd6fe3be8acf8dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2956844451186357919
+--- !u!114 &2226853645861646875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,9 +54,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1293638319414553334}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a115767594c2aa643b4a85719c052d96, type: 3}
+  m_Script: {fileID: 11500000, guid: 29aab9a7c4fc6a04e854dffd2cf68812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pastPosition: {x: 0, y: 0, z: 0}
+  currentPosition: {x: 0, y: 0, z: 0}
+  wrapContactables: []
+  radius: 0.1
 --- !u!136 &7231737498855535285
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -92,11 +96,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1293638319414553333}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: e7221bb4299f2d9418bc4bf09d1a609f,
-        type: 3}
-      propertyPath: m_Name
-      value: Mesh
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e7221bb4299f2d9418bc4bf09d1a609f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -172,6 +171,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 1fa75e2ebacf4c243999e3f7628e4373, type: 2}
+    - target: {fileID: -927199367670048503, guid: e7221bb4299f2d9418bc4bf09d1a609f,
+        type: 3}
+      propertyPath: m_Name
+      value: Mesh
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7221bb4299f2d9418bc4bf09d1a609f, type: 3}
 --- !u!1 &7120754119071130942 stripped

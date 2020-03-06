@@ -25,6 +25,21 @@ public class YarnLine {
         wraps = new List<Contact>();
     }
 
+    /**
+     * Updates the line of yarn physically, considering new contact points and removing invalid ones
+     */
+    public void FixedUpdate() {
+        // run through all Contacts:
+        // if a Contact's Contactable sees an overlap with other Contactables, add them
+        // if a Contact has become invalid, remove it
+        for (var i = 0; i < contacts.Count; i++) {
+            var contact = contacts[i];
+        }
+    }
+    
+    /**
+     * Updates the line of yarn visually, after physics calculation have been performed
+     */
     public void Update() {
         
     }
@@ -37,7 +52,7 @@ public class YarnLine {
         newContacts.Add(head);
         contacts = newContacts;
         
-        // update the renderpoints based on changes contacts
+        // update the renderpoints based on changed contacts
         
     }
 

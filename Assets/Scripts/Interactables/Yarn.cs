@@ -25,9 +25,15 @@ public class Yarn : Interactable {
         levelManager = FindObjectOfType<LevelManager>();
     }
 
+    private void FixedUpdate() {
+        // update the physics of the yarn line
+        //yarnLine?.FixedUpdate();
+        // todo: allow yarn to update
+    }
+
     private void Update() {
         // update the visuals of the yarn line
-        yarnLine?.Update();
+        //yarnLine?.Update();
 
         // update the points the LineRenderer is rendering
         if (lineRenderer && yarnLine != null) {
