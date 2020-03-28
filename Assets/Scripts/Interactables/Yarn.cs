@@ -176,4 +176,6 @@ public class Yarn : Interactable {
                 Gizmos.DrawLine(thisContactLastPoint, nextContactFirstPoint);
             }
     }
+
+  
 }
