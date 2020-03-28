@@ -9,8 +9,9 @@ public class Door : Interactable
     {
         SceneManager.LoadScene(goToLevel);
     }
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         doorText.text = goToLevel;
     }
 }
