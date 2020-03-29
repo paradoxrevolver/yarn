@@ -2,31 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    public GameObject PauseMenuPointer;
     //PlayerInput - should be moved to PlayerInteract if possible at a later time
     private PlayerInput playerInput;
-    private GameObject PauseMenuPointer;
     private void Awake()
     {
         playerInput = new PlayerInput();
-        PauseMenuPointer = gameObject.transform.Find("PauseMenu").gameObject;
-        playerInput.Player.Pause.started += OnPause;
         playerInput.Player.Pause.performed += OnPause;
-        playerInput.Player.Pause.canceled += OnPause;
         //Debug.Log("Debug Awake");
     }
     private void OnPause(InputAction.CallbackContext ctx)
@@ -43,22 +29,20 @@ public class PauseManager : MonoBehaviour
     // Pause toggling, depending on if component itself is active
     public void TogglePause()
     {
-        if (transform.GetChild(0).gameObject.activeSelf)
-        {
-            transform.GetChild(0).gameObject.SetActive(false);
-        }
-        else
-        {
-            transform.GetChild(0).gameObject.SetActive(true);
+        if(PauseMenuPointer != null) PauseMenuPointer.SetActive(!PauseMenuPointer.activeSelf);
+        else {
+            Debug.LogWarning("PauseManager tried to toggle PauseMenu but didn't have reference to a PauseMenu.");
         }
     }
 
-    public void resumeButton()
+    public void ResumeButton()
     {
         //Debug.Log("Resume Attempted");
         TogglePause();
     }
 
+    public void MenuButton() { SceneManager.LoadScene("Main Menu"); }
 
+    public void QuitButton() { Application.Quit(); }
 }
 

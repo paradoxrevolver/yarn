@@ -85,10 +85,9 @@ public class LevelManager : MonoBehaviour
         else LevelNormal();
     }
 
-    void LevelComplete()
-    {
+    void LevelComplete() {
         state = State.Won;
-        levelCompleteUI.gameObject.SetActive(true);
+        if (levelCompleteUI != null) levelCompleteUI.gameObject.SetActive(true);
         // Display "Level Complete"
         // Probably calling a gameManager function
         // The level complete function must show buttons to continue or go back to level
@@ -100,7 +99,7 @@ public class LevelManager : MonoBehaviour
     void LevelFailed()
     {
         state = State.Lost;
-        levelFailedUI.gameObject.SetActive(true);
+        if (levelFailedUI != null) levelFailedUI.gameObject.SetActive(true);
         
 
         // Display "Level Failed"
@@ -112,8 +111,8 @@ public class LevelManager : MonoBehaviour
 
     void LevelNormal()
     {
-        levelCompleteUI.gameObject.SetActive(false);
-        levelFailedUI.gameObject.SetActive(false);
+        if (levelCompleteUI != null) levelCompleteUI.gameObject.SetActive(false);
+        if (levelFailedUI != null) levelFailedUI.gameObject.SetActive(false);
 
         state = State.Normal;
 
