@@ -29,7 +29,7 @@ public class YarnLine {
     /**
      * Updates the line of yarn physically, considering new contact points and removing invalid ones
      */
-    public void FixedUpdate() {
+    public void PhysicsUpdate() {
         // run through all Contacts:
         // if a Contact's Contactable sees an overlap with other Contactables, add them
         // if a Contact has become invalid, remove it
@@ -41,7 +41,7 @@ public class YarnLine {
     /**
      * Updates the line of yarn visually, after physics calculation have been performed
      */
-    public void Update() { }
+    public void Draw() { }
 
     /* Fires whenever the structure of the line changes. */
     public void OnLineChanged() {

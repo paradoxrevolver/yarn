@@ -27,13 +27,13 @@ public class Yarn : Interactable {
 
     private void FixedUpdate() {
         // update the physics of the yarn line
-        //yarnLine?.FixedUpdate();
+        yarnLine?.PhysicsUpdate();
         // todo: allow yarn to update when things are ready
     }
 
     private void Update() {
         // update the visuals of the yarn line
-        //yarnLine?.Update();
+        yarnLine?.Draw();
 
         // update the points the LineRenderer is rendering
         if (lineRenderer && yarnLine != null) {
@@ -45,6 +45,7 @@ public class Yarn : Interactable {
     }
 
     public override void Interact(PlayerManager player) {
+        base.Interact(player);
         // the player picks up the yarn if they have their arms free
         if (playerManager.CheckState(PlayerManager.State.Normal)) {
             PickUp();
