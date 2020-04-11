@@ -8,7 +8,7 @@ public class Yarn : Interactable {
     public GameObject mesh;
 
     private LevelManager levelManager;
-    [HideInInspector] public YarnLine yarnLine;
+    public YarnLine yarnLine { get; private set; }
 
     public enum State {
         Normal,
@@ -16,7 +16,9 @@ public class Yarn : Interactable {
     }
     private State state;
 
-    public bool IsDestroyed() { return state == State.Destroyed; }
+    private bool CheckState(State state) { return state == this.state; }
+    public bool IsNormal() { return CheckState(State.Normal); }
+    public bool IsDestroyed() { return CheckState(State.Destroyed); }
     
     protected override void Awake() {
         base.Awake();
@@ -28,7 +30,6 @@ public class Yarn : Interactable {
     private void FixedUpdate() {
         // update the physics of the yarn line
         yarnLine?.PhysicsUpdate();
-        // todo: allow yarn to update when things are ready
     }
 
     private void Update() {
@@ -44,11 +45,11 @@ public class Yarn : Interactable {
         }
     }
 
-    public override void Interact(PlayerManager player) {
+    public override void Interact(Player player) {
         base.Interact(player);
         // the player picks up the yarn if they have their arms free
-        if (playerManager.CheckState(PlayerManager.State.Normal)) {
-            PickUp();
+        if (player.IsNormal()) {
+            GetPickedUp(player);
         }
     }
 
@@ -56,10 +57,9 @@ public class Yarn : Interactable {
 
     private void ShowMesh() { mesh.SetActive(true); }
 
-    private void PickUp() {
-        // give the player the yarn object and tell them to start holding
-        playerManager.SetState(PlayerManager.State.Holding);
-        playerManager.yarnHeld = this;
+    private void GetPickedUp(Player player) {
+        // give the player this yarn
+        player.GiveYarn(this);
         
         // this yarn is no longer interactable
         playerInteract.RemoveInteractable(this);
@@ -71,10 +71,9 @@ public class Yarn : Interactable {
         print("The player just picked up some yarn.");
     }
 
-    public void PutDown() {
+    public void GetPutDown(Player player) {
         // return the player to normal, take it from the player
-        playerManager.SetState(PlayerManager.State.Normal);
-        playerManager.yarnHeld = null;
+        player.RemoveYarn(this);
         
         // unparent the yarn, pulling it out to the outermost level
         transform.parent = null;
@@ -90,30 +89,24 @@ public class Yarn : Interactable {
     }
     
     /* Starts a line of yarn on the given pushpin. */
-    public void TieStart(Pushpin pushpin) {
-        playerManager.SetState(PlayerManager.State.Normal);
-        if(mesh) HideMesh();
-        
-        yarnLine = new YarnLine(this, playerManager.playerContactable.GetNewContact(), pushpin.interactContactable.GetNewContact());
+    public void StartYarnLine(Pushpin pushpin) {
+        yarnLine = new YarnLine(this, player.playerContactable.GetNewContact(), pushpin.interactContactable.GetNewContact());
     }
 
     /* Finishes off a line of yarn on the given pushpin. */
-    public void TieEnd(Pushpin pushpin) {
-        
+    public void FinishYarnLine(Pushpin pushpin) {
+        if(mesh) HideMesh();
     }
 
     /* Untie a line of yarn from a pushpin to continue to edit the line. */
-    public void UntieStart(Pushpin pushpin) {
-        playerManager.SetState(PlayerManager.State.Pulling);
+    public void EditYarnLine(Pushpin pushpin) {
         if(mesh) ShowMesh();
         
         // todo: remove the pushpin's contact, add the player
     }
 
     /* Untie a line of yarn from a pushpin to remove the line. */
-    public void UntieEnd(Pushpin pushpin) {
+    public void UndoYarnLine(Pushpin pushpin) {
         
     }
-
-  
 }

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class Door : Interactable {
     public string goToLevel;
     public Text doorText;
-    public override void Interact(PlayerManager player)
+    public override void Interact(Player player)
     {
         SceneManager.LoadScene(goToLevel);
     }

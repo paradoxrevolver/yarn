@@ -1,6 +1,8 @@
+using System;
+
 public class Pushpin : Interactable {
 
-    private Yarn connectedYarn;
+    public Yarn connectedYarn { get; protected set; }
 
     public InteractContactable interactContactable { get; protected set; }
 
@@ -10,8 +12,14 @@ public class Pushpin : Interactable {
         Done,
     }
     private State state;
-    
-    public bool IsDone() { return state == State.Done; }
+
+    private bool CheckState(State state) { return state == this.state; }
+    public bool IsUntied() { return CheckState(State.Untied); }
+    public bool IsTied() { return CheckState(State.Tied); }
+    public bool IsDone() { return CheckState(State.Done); }
+
+    private void SetState(State state) { this.state = state; }
+
     protected override void Awake() {
         base.Awake();
         state = State.Untied;
@@ -19,7 +27,7 @@ public class Pushpin : Interactable {
         interactContactable = GetComponent<InteractContactable>();
     }
 
-    public override void Interact(PlayerManager player) {
+    public override void Interact(Player player) {
         base.Interact(player);
         connectedYarn = player.yarnHeld;
 
@@ -31,16 +39,18 @@ public class Pushpin : Interactable {
              *     - The player is pulling yarn, in which case the player wants to finish a line of yarn
              */
             case State.Untied: {
-                if (playerManager.CheckState(PlayerManager.State.Holding)) {
-                    state = State.Tied;
-                    playerManager.SetState(PlayerManager.State.Pulling);
-                    connectedYarn.TieStart(this);
+                if (player.IsHolding()) {
+                    // start a line of yarn
+                    SetState(State.Tied);
+                    player.StartPulling(connectedYarn, this);
+                    connectedYarn.StartYarnLine(this);
                     print("Yarn was just tied to a Pushpin, starting a line.");
                     
-                } else if (playerManager.CheckState(PlayerManager.State.Pulling)) {
-                    state = State.Tied;
-                    playerManager.SetState(PlayerManager.State.Normal);
-                    connectedYarn.TieEnd(this);
+                } else if (player.IsPulling()) {
+                    // finish a line of yarn
+                    SetState(State.Tied);
+                    player.FinishPulling(connectedYarn, this);
+                    connectedYarn.FinishYarnLine(this);
                     print("Yarn was just tied to a Pushpin, ending a line.");
                 }
                 break;
@@ -55,20 +65,22 @@ public class Pushpin : Interactable {
              */
             case State.Tied:
             case State.Done: {
-                if (playerManager.CheckState(PlayerManager.State.Pulling)
-                        && connectedYarn.yarnLine != null) {
-                    // return to holding yarn
-                    state = State.Untied;
-                    playerManager.SetState(PlayerManager.State.Holding);
-                    connectedYarn.UntieEnd(this);
+                // connected yarn needs to have a yarn line to be detached
+                if (connectedYarn.yarnLine == null) break;
+                
+                if (player.IsNormal()) {
+                    // resume editing a line of yarn
+                    SetState(State.Untied);
+                    player.EditPulling(connectedYarn, this);
+                    connectedYarn.EditYarnLine(this);
+                    print("Yarn was just untied from a Pushpin, to edit a line.");
+                } else if (player.IsPulling()) {
+                    // undo the line of yarn entirely
+                    SetState(State.Untied);
+                    player.UndoPulling(connectedYarn, this);
+                    connectedYarn.UndoYarnLine(this);
                     print("Yarn was just untied from a Pushpin, undoing a line.");
                 
-                } else if (playerManager.CheckState(PlayerManager.State.Normal)
-                        && connectedYarn.yarnLine != null) {
-                    // start changing a line of yarn again
-                    state = State.Untied;
-                    connectedYarn.UntieStart(this);
-                    print("Yarn was just untied from a Pushpin, to edit a line.");
                 }
                 break;
             }
