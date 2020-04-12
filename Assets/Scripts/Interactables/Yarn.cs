@@ -39,7 +39,7 @@ public class Yarn : Interactable {
         // update the points the LineRenderer is rendering
         if (lineRenderer && yarnLine != null) {
             var linePoints = new List<Vector3>();
-            foreach (var c in yarnLine.contacts) linePoints.AddRange(c.renderPoints);
+            linePoints.AddRange(yarnLine.renderPoints);
             lineRenderer.positionCount = linePoints.Count;
             lineRenderer.SetPositions(linePoints.ToArray());
         }
@@ -57,6 +57,7 @@ public class Yarn : Interactable {
 
     private void ShowMesh() { mesh.SetActive(true); }
 
+    /* A Player picks up this Yarn. */
     private void GetPickedUp(Player player) {
         // give the player this yarn
         player.GiveYarn(this);
@@ -71,6 +72,7 @@ public class Yarn : Interactable {
         print("The player just picked up some yarn.");
     }
 
+    /* A Player puts down this Yarn. */
     public void GetPutDown(Player player) {
         // return the player to normal, take it from the player
         player.RemoveYarn(this);
@@ -88,25 +90,34 @@ public class Yarn : Interactable {
         print("The player has dropped the yarn.");
     }
     
-    /* Starts a line of yarn on the given pushpin. */
-    public void StartYarnLine(Pushpin pushpin) {
+    /* Starts a line of yarn between a Player and a Pushpin. */
+    public void StartYarnLine(Player player, Pushpin pushpin) {
         yarnLine = new YarnLine(this, player.playerContactable.GetNewContact(), pushpin.interactContactable.GetNewContact());
     }
 
-    /* Finishes off a line of yarn on the given pushpin. */
+    /* Finishes off this Yarn's line on the given Pushpin. */
     public void FinishYarnLine(Pushpin pushpin) {
         if(mesh) HideMesh();
+        yarnLine.SetTail(pushpin.interactContactable.GetNewContact());
     }
 
-    /* Untie a line of yarn from a pushpin to continue to edit the line. */
-    public void EditYarnLine(Pushpin pushpin) {
+    /* Unties this Yarn's line from a Pushpin to allow a Player to edit the line. */
+    public void EditYarnLine(Pushpin pushpin, Player player) {
         if(mesh) ShowMesh();
         
-        // todo: remove the pushpin's contact, add the player
+        // add the player on the same side of the YarnLine that the given Pushpin is at
+        if (yarnLine.GetHead().gameObject.Equals(pushpin.gameObject)) {
+            yarnLine.SetHead(player.playerContactable.GetNewContact());
+        } else if (yarnLine.GetTail().gameObject.Equals(pushpin.gameObject)) {
+            yarnLine.SetTail(player.playerContactable.GetNewContact());
+        } else {
+            throw new Exception($"{this} was told to edit its YarnLine, but was given a Pushpin that isn't on either side of the YarnLine!");
+        }
     }
 
-    /* Untie a line of yarn from a pushpin to remove the line. */
+    /* Undoes this Yarn's line from a Pushpin to remove the line. */
     public void UndoYarnLine(Pushpin pushpin) {
-        
+        yarnLine.Clear();
+        yarnLine = null;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /**
@@ -11,7 +12,7 @@ public class YarnLine {
     // every other contact in the list is some sort of Contact
     private List<Contact> wraps;
 
-    private Yarn host;
+    private Yarn yarn;
 
     public List<Contact> contacts { get; private set; }
     public List<Vector3> renderPoints { get; private set; }
@@ -19,11 +20,12 @@ public class YarnLine {
     /**
      * A YarnLine can only be created by a Yarn that has been started between the Player and a Pushpin
      */
-    public YarnLine(Yarn host, PointContact player, PointContact pushpin) {
-        this.host = host;
-        head = player;
-        tail = pushpin;
+    public YarnLine(Yarn yarn, PointContact player, PointContact pushpin) {
+        this.yarn = yarn;
+        head = pushpin;
+        tail = player;
         wraps = new List<Contact>();
+        OnLineChanged();
     }
 
     /**
@@ -35,38 +37,46 @@ public class YarnLine {
         // if a Contact has become invalid, remove it
         for (var i = 0; i < contacts.Count; i++) {
             var contact = contacts[i];
+            // todo: check whatever needs to be checked to add or remove contacts from this YarnLine
         }
     }
 
     /**
      * Updates the line of yarn visually, after physics calculation have been performed
      */
-    public void Draw() { }
-
-    /* Fires whenever the structure of the line changes. */
-    public void OnLineChanged() {
-        // update the contacts list
-        List<Contact> newContacts = new List<Contact>(wraps.Count + 2) {tail};
-        newContacts.AddRange(wraps);
-        newContacts.Add(head);
-        contacts = newContacts;
-
-        // update the renderpoints based on changed contacts
-
+    public void Draw() {
+        
     }
 
-    public void Add(Contact contact) {
+    /* Fires whenever the structure of the line changes. */
+    private void OnLineChanged() {
+        // update the contacts list
+        contacts = new List<Contact>(wraps.Count + 2) {head};
+        contacts.AddRange(wraps);
+        contacts.Add(tail);
+
+        // update the renderpoints based on changed contacts
+        renderPoints = new List<Vector3>();
+        foreach (var contact in contacts) {
+            if(contact != null) renderPoints.AddRange(contact.renderPoints);
+        }
+    }
+
+    private void Add(Contact contact) {
         wraps.Add(contact);
         OnLineChanged();
     }
 
-    public int RemoveAll(Contact contact) { return RemoveAll(contact.host.gameObject); }
-    public int RemoveAll(GameObject gameObject) {
+    private int RemoveAll(Contact contact) { return RemoveAll(contact.host.gameObject); }
+    private int RemoveAll(GameObject gameObject) {
         int result = wraps.RemoveAll(wrap => wrap.host.gameObject.Equals(gameObject));
         OnLineChanged();
         return result;
     }
 
+    public Contactable GetHead() { return head.host; }
+    public Contactable GetTail() { return tail.host; }
+    
     /**
      * If you try to give this function a Player's Contact, it will flip the entire list
      * to ensure the Player is at the tail.
@@ -83,15 +93,24 @@ public class YarnLine {
     }
 
     /* Reverses the entire list, including the head and tail contacts. */
-    public void ReverseList() {
+    private void ReverseList() {
         // swap head and tail
         var temp = tail;
         tail = head;
         head = temp;
         // reverse all wrapping points
         wraps.Reverse();
-        // reverse all prev and next Contact references
-        
+        // todo: reverse all prev and next Contact references
+    }
+
+    /**
+     * Clears the entire line, removing everything.
+     */
+    public void Clear() {
+        head = null;
+        tail = null;
+        wraps.Clear();
+        OnLineChanged();
     }
     
     private void OnDrawGizmos() {
