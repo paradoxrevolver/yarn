@@ -4,23 +4,21 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    private Vector3 initialpos;
-    private Vector3 updatepos;
-    private Vector3 adjustpos;
-    public GameObject player;
+    private Vector3 offset;
+    public Transform player;
+    public float smoothSpeed = 0.125f;
+    
 
-    private void Start()
+    void LateUpdate()
     {
-        player = GameObject.Find("Player");
+        offset = new Vector3(0, 11, -9);
+        Vector3 desiredPos = player.position + offset;
 
-        initialpos = player.transform.position;
-    }
-    private void LateUpdate()
-    {
-        updatepos = player.transform.position;
-        updatepos = initialpos + updatepos;
-        updatepos.z = updatepos.z - 20;
-        updatepos.y = initialpos.y+20;
-        transform.position = updatepos;
+        // If smooth scroll wanted, use this line of code, although player looks laggy
+        //Vector3 smoothedPos = Vector3.Lerp(transform.position, desiredPos, smoothSpeed);
+        transform.position = desiredPos;
+
+
+
     }
 }

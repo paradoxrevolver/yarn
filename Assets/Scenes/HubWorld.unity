@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43667546, g: 0.48427135, b: 0.5645225, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -231,7 +231,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 773002d7c4660274bb20f0faa96a9b5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 8072518500933771439}
+  smoothSpeed: 0.125
 --- !u!81 &249006988
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1471,3 +1472,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f69a8d097947b154eb453aaa19b5b2ca, type: 3}
+--- !u!4 &8072518500933771439 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8072518499017028993, guid: f69a8d097947b154eb453aaa19b5b2ca,
+    type: 3}
+  m_PrefabInstance: {fileID: 8072518500933771438}
+  m_PrefabAsset: {fileID: 0}
