@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/HubWorld.unity
     guid: 6a84e2a0d6e1b0b469a7fd70b9a6e061
   - enabled: 1
-    path: Assets/Scenes/Template.unity
+    path: Assets/Scenes/Levels/4.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
     path: Assets/Scenes/Levels/1.unity
