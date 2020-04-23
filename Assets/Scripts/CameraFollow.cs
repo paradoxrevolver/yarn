@@ -9,14 +9,14 @@ public class CameraFollow : MonoBehaviour
     public float smoothSpeed = 0.125f;
     
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         offset = new Vector3(0, 11, -9);
         Vector3 desiredPos = player.position + offset;
 
         // If smooth scroll wanted, use this line of code, although player looks laggy
-        //Vector3 smoothedPos = Vector3.Lerp(transform.position, desiredPos, smoothSpeed);
-        transform.position = desiredPos;
+        Vector3 smoothedPos = Vector3.Lerp(transform.position, desiredPos, smoothSpeed);
+        transform.position = smoothedPos;
 
 
 
