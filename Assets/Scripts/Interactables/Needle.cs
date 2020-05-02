@@ -12,7 +12,7 @@ public class Needle : Interactable {
         meshLowerable = GetComponentInChildren<Lowerable>();
     }
 
-    public override void Interact() {
+    public override void Interact(Player player) {
         ToggleState();
     }
 

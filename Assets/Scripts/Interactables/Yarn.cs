@@ -5,8 +5,10 @@ using UnityEngine;
 public class Yarn : Interactable {
     public Vector3 positionYarnInPlayersArms;
     public LineRenderer lineRenderer;
+    public GameObject mesh;
 
     private LevelManager levelManager;
+    public YarnLine yarnLine { get; private set; }
 
     public enum State {
         Normal,
@@ -14,96 +16,40 @@ public class Yarn : Interactable {
     }
     private State state;
 
-    public bool IsDestroyed() { return state == State.Destroyed; }
+    private bool CheckState(State state) { return state == this.state; }
+    public bool IsNormal() { return CheckState(State.Normal); }
+    public bool IsDestroyed() { return CheckState(State.Destroyed); }
     
-    /**
-     * The Yarn object maintains a list of Contacts to know what it has been wrapped around
-     */
-    private List<Contact> contacts;
-    
-    public void AddContact(GameObject obj) {
-        contacts.Add(new Contact(this, obj, levelManager, 0));
-    }
-
-    public void InsertContact(GameObject obj, int index, float initialAngle) {
-        contacts.Insert(index, new Contact(this, obj, levelManager, initialAngle));
-    }
-    
-    /* Remove all Contacts with obj as its source. */
-    public void RemoveContactAll(GameObject obj) {
-        foreach(Contact c in contacts.FindAll(c => c.source == obj))
-            contacts.Remove(c);
-    }
-    
-    public void RemoveContact(Contact c) { contacts.Remove(c); }
-    
-    /*
-     * Remove a Contacts with obj as its source, but only at the beginning or end of the contacts list.
-     *
-     * Additionally causes the contacts list to reverse order if trying to remove the contact from the front.
-     * This is done in the event that the player tries to remove the yarn from the opposite end, so that
-     * the yarn's contacts are always added from the end of the list.
-     */
-    public void RemoveContactFromEnd(GameObject obj) {
-        if(contacts[0].source == obj) contacts.Reverse();
-        if(contacts[contacts.Count - 1].source == obj) contacts.RemoveAt(contacts.Count - 1);
-    }
-
-    /* Does the contacts list contain any Contact with obj as a source? */
-    public bool ContainsContact(GameObject obj) {
-        return contacts.Exists(c => c.source == obj);
-    }
-
-    /* Is obj a Contact at the beginning or end of the contacts list? */
-    public bool IsContactAtEnd(GameObject obj) {
-        return contacts[0].source == obj || contacts[contacts.Count - 1].source == obj;
-    }
-    
-    public int ContactCount() { return contacts.Count; }
-
-    public GameObject mesh;
-
     protected override void Awake() {
         base.Awake();
         state = State.Normal;
-        contacts = new List<Contact>();
+        yarnLine = null;
         levelManager = FindObjectOfType<LevelManager>();
     }
 
+    private void FixedUpdate() {
+        // update the physics of the yarn line
+        yarnLine?.PhysicsUpdate();
+    }
+
     private void Update() {
+        // update the visuals of the yarn line
+        yarnLine?.Draw();
+
         // update the points the LineRenderer is rendering
-        if (lineRenderer) {
+        if (lineRenderer && yarnLine != null) {
             var linePoints = new List<Vector3>();
-            foreach (var c in contacts) linePoints.AddRange(c.renderPoints);
+            linePoints.AddRange(yarnLine.renderPoints);
             lineRenderer.positionCount = linePoints.Count;
             lineRenderer.SetPositions(linePoints.ToArray());
         }
     }
 
-    private void FixedUpdate() { UpdateAllContacts(); }
-
-    private void UpdateAllContacts() {
-        // first, update the render points for all contacts.
-        foreach(Contact c in contacts)
-            c.UpdateRenderPoints();
-        
-        // next, update the angles that all contacts have to their next contact.
-        for(var i = 0; i < contacts.Count - 1; i++)
-            contacts[i].UpdateLine(contacts[i + 1]);
-        
-        // contacts remove themselves if they've been unraveled
-        /*for(var i = 1; i < contacts.Count - 1; i++)
-            contacts[i].UpdateUnraveled(contacts[i - 1]);*/
-        
-        // update the potential contacts list, adding new proceeding contacts if necessary.
-        for(var i = 0; i < contacts.Count - 1; i++)
-            contacts[i].UpdateCandidates(contacts[i + 1], i);
-    }
-
-    public override void Interact() {
+    public override void Interact(Player player) {
+        base.Interact(player);
         // the player picks up the yarn if they have their arms free
-        if (playerManager.CheckState(PlayerManager.State.Normal)) {
-            PickUp();
+        if (player.IsNormal()) {
+            GetPickedUp(player);
         }
     }
 
@@ -111,71 +57,67 @@ public class Yarn : Interactable {
 
     private void ShowMesh() { mesh.SetActive(true); }
 
-    private void PickUp() {
-        AddContact(player.gameObject);
-        playerManager.SetState(PlayerManager.State.Holding);
-        playerManager.YarnHeld = this;
+    /* A Player picks up this Yarn. */
+    private void GetPickedUp(Player player) {
+        // give the player this yarn
+        player.GiveYarn(this);
+        
+        // this yarn is no longer interactable
         playerInteract.RemoveInteractable(this);
+        
+        // parent the yarn to the player and position it in their arms
         transform.SetParent(player.transform);
         transform.localPosition = positionYarnInPlayersArms;
+        
         print("The player just picked up some yarn.");
     }
 
-    public void PutDown() {
-        playerManager.SetState(PlayerManager.State.Normal);
-        playerManager.YarnHeld = null;
+    /* A Player puts down this Yarn. */
+    public void GetPutDown(Player player) {
+        // return the player to normal, take it from the player
+        player.RemoveYarn(this);
+        
+        // unparent the yarn, pulling it out to the outermost level
         transform.parent = null;
+        
+        // calculate a new position for the yarn on the grid and set it there
         Vector3 positionOnGround = new Vector3(
             Mathf.Round(player.transform.localPosition.x/2f)*2f,
             0,
             Mathf.Round(player.transform.localPosition.z/2f)*2f);
         transform.localPosition = positionOnGround;
+        
         print("The player has dropped the yarn.");
     }
-
-    /* Untie this Yarn object from the given Pushpin, returning control to the player. */
-    public void UntieFrom(Pushpin pushpin) {
-        playerManager.SetState(PlayerManager.State.Pulling);
-        RemoveContactFromEnd(pushpin.gameObject);
-        AddContact(player.gameObject);
-        if(mesh) ShowMesh();
-    }
     
-    /* Ties this Yarn off on the given Pushpin, removing control from the player. */
-    public void TieTo(Pushpin pushpin) {
-        playerManager.SetState(PlayerManager.State.Normal);
-        RemoveContactFromEnd(player);
-        AddContact(pushpin.gameObject);
+    /* Starts a line of yarn between a Player and a Pushpin. */
+    public void StartYarnLine(Player player, Pushpin pushpin) {
+        yarnLine = new YarnLine(this, player.playerContactable.GetNewContact(), pushpin.interactContactable.GetNewContact());
+    }
+
+    /* Finishes off this Yarn's line on the given Pushpin. */
+    public void FinishYarnLine(Pushpin pushpin) {
         if(mesh) HideMesh();
+        yarnLine.SetTail(pushpin.interactContactable.GetNewContact());
     }
 
-    private void OnDrawGizmos() {
-        // render gizmos showing the render point connections
-        if (contacts != null)
-            for (var i = 0; i < contacts.Count; i++) {
-                // draw lines between all of the render points for this contact
-                var thisContact = contacts[i];
-                if (thisContact.renderPoints.Count < 1) continue;
-                
-                for (var j = 0; j < thisContact.renderPoints.Count - 1; j++) {
-                    var thisPoint = thisContact.renderPoints[j];
-                    var nextPoint = thisContact.renderPoints[j+1];
-                    Gizmos.DrawLine(thisPoint, nextPoint);
-                }
-                // if we know there's another contact after this one, draw a line
-                // from the last renderPoint on this contact to the first renderPoint
-                // on the next contact.
-                if (i >= contacts.Count - 1) continue;
-
-                var nextContact = contacts[i + 1];
-                if (nextContact.renderPoints.Count < 1) continue;
-                var thisContactLastPointIndex = thisContact.renderPoints.Count - 1;
-                    
-                var thisContactLastPoint = thisContact.renderPoints[thisContactLastPointIndex];
-                var nextContactFirstPoint = nextContact.renderPoints[0];
-                Gizmos.DrawLine(thisContactLastPoint, nextContactFirstPoint);
-            }
+    /* Unties this Yarn's line from a Pushpin to allow a Player to edit the line. */
+    public void EditYarnLine(Pushpin pushpin, Player player) {
+        if(mesh) ShowMesh();
+        
+        // add the player on the same side of the YarnLine that the given Pushpin is at
+        if (yarnLine.GetHead().gameObject.Equals(pushpin.gameObject)) {
+            yarnLine.SetHead(player.playerContactable.GetNewContact());
+        } else if (yarnLine.GetTail().gameObject.Equals(pushpin.gameObject)) {
+            yarnLine.SetTail(player.playerContactable.GetNewContact());
+        } else {
+            throw new Exception($"{this} was told to edit its YarnLine, but was given a Pushpin that isn't on either side of the YarnLine!");
+        }
     }
 
-  
+    /* Undoes this Yarn's line from a Pushpin to remove the line. */
+    public void UndoYarnLine(Pushpin pushpin) {
+        yarnLine.Clear();
+        yarnLine = null;
+    }
 }

@@ -9,12 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8072518499017028993}
-  - component: {fileID: 8072518499017028992}
   - component: {fileID: 8072518499017028995}
   - component: {fileID: 8072518499017028994}
+  - component: {fileID: 8072518499017028992}
   - component: {fileID: 8072518499017028997}
   - component: {fileID: 8072518499017028996}
   - component: {fileID: 8072518499017028999}
+  - component: {fileID: 2313245474546743258}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -37,20 +38,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8072518499017028992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8072518499017028998}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0daccf5fb693e6b4b817a62deb9df3db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  normalMesh: {fileID: 227068772183194632}
-  holdingMesh: {fileID: 227068771119847383}
 --- !u!54 &8072518499017028995
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -81,6 +68,20 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8072518499017028992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8072518499017028998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0daccf5fb693e6b4b817a62deb9df3db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalMesh: {fileID: 227068772183194632}
+  holdingMesh: {fileID: 227068771119847383}
 --- !u!114 &8072518499017028997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,6 +206,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79d0552d8ac375449d5c8b767c78682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2313245474546743258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8072518499017028998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab040f71654faec4c811af8fee2ae1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pastPosition: {x: 0, y: 0, z: 0}
+  currentPosition: {x: 0, y: 0, z: 0}
+  wrapContactables: []
+  pointOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &8072518499020361757
 GameObject:
   m_ObjectHideFlags: 0

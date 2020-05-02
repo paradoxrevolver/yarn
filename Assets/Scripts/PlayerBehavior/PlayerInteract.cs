@@ -7,24 +7,28 @@ using UnityEngine.SceneManagement;
 public class PlayerInteract : MonoBehaviour {
     
     private PlayerInput playerInput;
-    private PlayerManager playerManager;
+    private Player player;
     private List<Interactable> interactables;
 
     private void Awake() {
         playerInput = new PlayerInput();
-        playerManager = GetComponent<PlayerManager>();
+        player = GetComponent<Player>();
         
-        playerInput.Player.Fire.started += OnInteract;
         SceneManager.sceneLoaded += (scene, mode) => {
             interactables.Clear();
         };
-        
         
         interactables = new List<Interactable>();
     }
     
     private void OnEnable() {
+        playerInput.Player.Fire.started += OnInteract;
         playerInput.Player.Enable();
+    }
+
+    private void OnDisable() {
+        playerInput.Player.Fire.started -= OnInteract;
+        playerInput.Player.Disable();
     }
 
     private void Update() { 
@@ -44,9 +48,9 @@ public class PlayerInteract : MonoBehaviour {
 
     private void OnInteract(InputAction.CallbackContext ctx) {
         if (interactables.Count > 0) {
-            TopInteractable().Interact();
-        } else if (playerManager.CheckState(PlayerManager.State.Holding)) {
-            playerManager.YarnHeld.PutDown();
+            TopInteractable().Interact(player);
+        } else if (player.IsHolding()) {
+            player.yarnHeld.GetPutDown(player);
         }
     }
 }

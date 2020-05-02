@@ -24,7 +24,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8523065194936625137}
   - component: {fileID: 8523065194936625138}
-  - component: {fileID: 8839065093546782790}
+  - component: {fileID: 5940000930525792920}
   m_Layer: 0
   m_Name: Match
   m_TagString: Untagged
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd85f814f92a48f7bf516ac06983ab78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8839065093546782790
+--- !u!114 &5940000930525792920
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -68,9 +68,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8523065194936625136}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a115767594c2aa643b4a85719c052d96, type: 3}
+  m_Script: {fileID: 11500000, guid: 29aab9a7c4fc6a04e854dffd2cf68812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pastPosition: {x: 0, y: 0, z: 0}
+  currentPosition: {x: 0, y: 0, z: 0}
+  wrapContactables: []
+  radius: 0.1
 --- !u!1001 &8523065195629964848
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -78,11 +82,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8523065194936625137}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: abe6dda665f9e2f4bb9fa774c916e053,
-        type: 3}
-      propertyPath: m_Name
-      value: Mesh
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: abe6dda665f9e2f4bb9fa774c916e053,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -158,6 +157,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 87c8d427e891ff14c8a9fc1b5571c399, type: 2}
+    - target: {fileID: -927199367670048503, guid: abe6dda665f9e2f4bb9fa774c916e053,
+        type: 3}
+      propertyPath: m_Name
+      value: Mesh
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: abe6dda665f9e2f4bb9fa774c916e053, type: 3}
 --- !u!1 &390106403564140345 stripped

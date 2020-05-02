@@ -6,8 +6,7 @@
  * An Interactable will create its own BoxCollider according to dimensions and offset
  */
 public abstract class Interactable : MonoBehaviour {
-    protected GameObject player;
-    protected PlayerManager playerManager;
+    protected Player player;
     protected PlayerInteract playerInteract;
     
     // Sets the dimensions of the collider and offset from center of this GameObject
@@ -16,10 +15,6 @@ public abstract class Interactable : MonoBehaviour {
     private BoxCollider boxCollider;
 
     protected virtual void Awake() {
-        player = GameObject.FindGameObjectWithTag("Player");
-        playerManager = player.GetComponent<PlayerManager>();
-        playerInteract = player.GetComponent<PlayerInteract>();
-        
         // place a trigger region on this Interactable
         boxCollider = gameObject.AddComponent<BoxCollider>();
         boxCollider.isTrigger = true;
@@ -31,7 +26,10 @@ public abstract class Interactable : MonoBehaviour {
      * Performs an interaction with this Interactable.
      * Should be customized per type of Interactable.
      */
-    public abstract void Interact();
+    public virtual void Interact(Player player) {
+        this.player = player;
+        playerInteract = player.GetComponent<PlayerInteract>();
+    }
 
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")) {
